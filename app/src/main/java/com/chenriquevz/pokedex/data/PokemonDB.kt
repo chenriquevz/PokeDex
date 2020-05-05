@@ -8,11 +8,11 @@ import androidx.room.TypeConverters
 import com.chenriquevz.pokedex.model.*
 
 @Database(
-    entities = [PokemonAbility::class, AbilityEffectEntries::class, PokemonEvolution::class,
+    entities = [PokemonAbility::class, AbilityEffectEntries::class, PokemonEvolution::class, EvolutionChainFirst::class, EvolutionChainSecond::class,
         PokemonGeneral::class, AbilitiesList::class, Stats::class, Type::class,
         PokemonSpecies::class, PokemonVarieties::class,
         PokemonByType::class, PokemonByNumber::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class PokemonDB : RoomDatabase() {

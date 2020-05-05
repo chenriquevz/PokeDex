@@ -17,8 +17,8 @@ class PaginationByType (
 )
 
 class GeneralEntry (
-    @SerializedName("name") val name: String,
-    @SerializedName("url") val url: String?
+    @SerializedName("name") val nameGeneral: String,
+    @SerializedName("url") val urlGeneral: String
 )
 
 class PokemonList (
@@ -26,3 +26,22 @@ class PokemonList (
 )
 
 
+class PaginationEvolution (
+    @SerializedName("id") val id: Int,
+    @SerializedName("chain") val chain: PaginationEvolutionChain
+)
+
+class PaginationEvolutionChain(
+    @SerializedName("species") val species: GeneralEntry,
+    @SerializedName("evolves_to") val evolvesTo: List<PaginationEvolutionChainSecond>? = null
+)
+
+class PaginationEvolutionChainSecond(
+    @SerializedName("species") val species: GeneralEntry,
+    @SerializedName("evolves_to") val evolvesTo: List<PaginationEvolutionChainThird>? = null
+)
+
+class PaginationEvolutionChainThird(
+    @SerializedName("species") val species: GeneralEntry,
+    @SerializedName("evolves_to") val evolvesTo: List<String>? = null
+)

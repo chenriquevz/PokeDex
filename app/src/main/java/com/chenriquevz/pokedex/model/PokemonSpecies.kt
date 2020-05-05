@@ -8,14 +8,17 @@ import com.google.gson.annotations.SerializedName
     indices = [
         Index("id", unique = true)]
 )
-data class PokemonSpecies (
+data class PokemonSpecies(
     @field:SerializedName("id") val id: Int,
     @field:SerializedName("name") val name: String,
-    @Embedded @field:SerializedName("evolution_chain") val evolutionChain: EvolutionChain,
-    @Embedded @field:SerializedName("varieties") val varieties: List<PokemonVarieties>
-    )
+    @Embedded @field:SerializedName("evolution_chain") val evolutionChain: EvolutionChain
+) {
+    @Ignore
+    @field:SerializedName("varieties")
+    var varieties: List<PokemonVarieties>? = emptyList()
+}
 
-data class EvolutionChain (
+data class EvolutionChain(
     @field:SerializedName("url") val url: String
 )
 
@@ -28,12 +31,12 @@ data class EvolutionChain (
     )], indices = [
         Index("id", unique = false)]
 )
-data class PokemonVarieties (
+data class PokemonVarieties(
     val id: Int,
     @field:SerializedName("is_default") val isDefault: Boolean,
-    @field:SerializedName("pokemon") val pokemonVariety: GeneralEntry
-){
+    @Embedded @field:SerializedName("pokemon") val pokemonVariety: GeneralEntry
+) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "localID")
     var localID: Int = 0
 }

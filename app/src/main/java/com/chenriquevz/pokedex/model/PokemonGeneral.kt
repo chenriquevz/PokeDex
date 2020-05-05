@@ -12,12 +12,23 @@ data class PokemonGeneral(
     @field:SerializedName("id") val id: Int,
     @field:SerializedName("name") val name: String,
     @field:SerializedName("is_default") val isDefaault: Boolean,
-    @field:SerializedName("abilities") val abilities: List<AbilitiesList>,
     @Embedded @field:SerializedName("species") val species: GeneralEntry,
-    @Embedded @field:SerializedName("sprites") val sprites: Sprites,
-    @field:SerializedName("stats") val stats: List<Stats>,
-    @field:SerializedName("types") val type: List<Type>
-    )
+    @Embedded @field:SerializedName("sprites") val sprites: Sprites
+) {
+
+    @Ignore
+    @field:SerializedName("abilities")
+    var abilities: List<AbilitiesList>? = emptyList()
+
+    @Ignore
+    @field:SerializedName("stats")
+    var stats: List<Stats>? = emptyList()
+
+    @Ignore
+    @field:SerializedName("types")
+    var type: List<Type>? = emptyList()
+
+}
 
 @Entity(
     foreignKeys = [ForeignKey(
@@ -28,16 +39,16 @@ data class PokemonGeneral(
     )], indices = [
         Index("id", unique = false)]
 )
-data class AbilitiesList (
+data class AbilitiesList(
     val id: Int,
-    @field:SerializedName("ability") val general: GeneralEntry
+    @Embedded @field:SerializedName("ability") val general: GeneralEntry
 ) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "localID")
     var localID: Int = 0
 }
 
-data class Sprites (
+data class Sprites(
     @field:SerializedName("front_default") val frontDefault: String?,
     @field:SerializedName("back_default") val backDefault: String?,
     @field:SerializedName("front_shiny") val frontShiny: String?,
@@ -57,14 +68,14 @@ data class Sprites (
     )], indices = [
         Index("id", unique = false)]
 )
-data class Stats (
+data class Stats(
     val id: Int,
     @field:SerializedName("base_stat") val baseStat: Int,
     @field:SerializedName("effort") val effort: Int,
     @Embedded @field:SerializedName("stat") val stat: GeneralEntry
 ) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "localID")
     var localID: Int = 0
 }
 
@@ -78,11 +89,11 @@ data class Stats (
     )], indices = [
         Index("id", unique = false)]
 )
-data class Type (
+data class Type(
     val id: Int,
-    @field:SerializedName("type") val baseStat: GeneralEntry
+    @Embedded @field:SerializedName("type") val baseStat: GeneralEntry
 ) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "localID")
     var localID: Int = 0
 }

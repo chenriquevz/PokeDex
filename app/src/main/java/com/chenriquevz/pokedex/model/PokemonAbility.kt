@@ -10,9 +10,12 @@ import com.google.gson.annotations.SerializedName
 )
 data class PokemonAbility (
     @field:SerializedName("id") val id: Int,
-    @field:SerializedName("name") val name: String,
-    @field:SerializedName("effect_entries") val effectEntries: List<AbilityEffectEntries>
-)
+    @field:SerializedName("name") val name: String
+) {
+    @Ignore
+    @field:SerializedName("effect_entries")
+    val effectEntries: List<AbilityEffectEntries>? = emptyList()
+}
 
 @Entity(
     foreignKeys = [ForeignKey(
@@ -29,6 +32,6 @@ data class AbilityEffectEntries(
     @field:SerializedName("short_effect") val shortEffect: String
 ){
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "localID")
     var localID: Int = 0
 }
