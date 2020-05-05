@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
 )
 data class PokemonEvolution(
     @field:SerializedName("id") val id: Int,
-    @Embedded @field:SerializedName("species") val species: GeneralEntry
+    @Embedded val species: GeneralEntry
 ) {
     @Ignore
     @field:SerializedName("chain")
@@ -24,12 +24,12 @@ data class PokemonEvolution(
         childColumns = arrayOf("id"),
         onDelete = ForeignKey.CASCADE
     )], indices = [
-        Index("id", unique = true)]
+        Index("id", unique = false), Index("localID", unique = true)]
 )
 data class EvolutionChainFirst(
     val id: Int,
     @PrimaryKey val localID: Int,
-    @Embedded @field:SerializedName("species") val species: GeneralEntry
+    @Embedded val species: GeneralEntry
 ) {
     @Ignore
     @field:SerializedName("evolves_to")
@@ -47,7 +47,7 @@ data class EvolutionChainFirst(
 )
 data class EvolutionChainSecond(
     val id: Int,
-    @Embedded @field:SerializedName("species") val species: GeneralEntry
+    @Embedded val species: GeneralEntry
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "localID")

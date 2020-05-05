@@ -13,21 +13,22 @@ class PokemonEvolutionRelation {
 
     @Relation(
         parentColumn = "id",
-        entityColumn = "id"
+        entityColumn = "id",
+        entity = EvolutionChainFirst::class
     )
-    var pokemonChainSecond: List<PokemonFirstToSecondChain> = emptyList()
+    var pokemonChainFirst: List<PokemonFirstToSecondChain> = emptyList()
 
 }
 
 class PokemonFirstToSecondChain {
 
     @Embedded
-    var pokemonSecond: EvolutionChainFirst? = null
+    var pokemonFirst: EvolutionChainFirst? = null
 
     @Relation(
         parentColumn = "localID",
         entityColumn = "id"
     )
-    var pokemonThird: List<EvolutionChainSecond> = emptyList()
+    var pokemonSecond: List<EvolutionChainSecond> = emptyList()
 
 }

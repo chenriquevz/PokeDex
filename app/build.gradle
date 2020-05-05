@@ -49,4 +49,14 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit-mock:2.6.2"
     implementation "com.squareup.okhttp3:logging-interceptor:4.3.0"
     implementation "com.squareup.okio:okio:2.4.3"
+
+    //Dagger
+    implementation "com.google.dagger:dagger:2.25.4"
+    kapt "com.google.dagger:dagger-compiler:2.25.4"
+    implementation "com.google.dagger:dagger-android:2.25.4"
+    implementation "com.google.dagger:dagger-android-support:2.25.4"
+    compileOnly 'com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2'
+    kapt 'com.squareup.inject:assisted-inject-processor-dagger2:0.5.2'
+    kapt "com.google.dagger:dagger-android-processor:2.25.4"
+
 }
