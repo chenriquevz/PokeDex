@@ -12,7 +12,6 @@ class PaginationByNumber (
 class PaginationByType (
     @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,
-    @SerializedName("previous") val previous: String?,
     @SerializedName("pokemon") val results: List<PokemonList>
 )
 

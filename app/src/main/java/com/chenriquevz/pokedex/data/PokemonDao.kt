@@ -12,8 +12,8 @@ import com.chenriquevz.pokedex.model.*
 interface PokemonDao {
 
     @Transaction
-    @Query("SELECT * FROM PokemonByNumber WHERE id = :id")
-    fun getListByNumber(id: Int): LiveData<List<PokemonByNumber>>
+    @Query("SELECT * FROM PokemonByNumber ORDER BY id ASC")
+    fun getListByNumber(): LiveData<List<PokemonByNumber>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertListByNumber(pokemonList: List<PokemonByNumber>)

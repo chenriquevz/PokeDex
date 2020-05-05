@@ -21,17 +21,5 @@ abstract class ViewModelModule {
     abstract fun provideViewModelFactory(
         factory: ViewModelFactory
     ): ViewModelProvider.Factory
-    /*
-    @Binds
-    @IntoMap
-    @ViewModelKey(FavoritesViewModel::class)
-    abstract fun bindFavoriteSetsViewModel(viewModel: FavoritesViewModel): ViewModel
-
-
-
-
-
-
-     */
 
 }
