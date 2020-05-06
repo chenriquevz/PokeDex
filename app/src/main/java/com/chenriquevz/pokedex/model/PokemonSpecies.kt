@@ -15,7 +15,7 @@ data class PokemonSpecies(
 ) {
     @Ignore
     @field:SerializedName("varieties")
-    var varieties: List<PokemonVarieties>? = emptyList()
+    var varieties: List<PokemonVarieties> = emptyList()
 }
 
 data class EvolutionChain(

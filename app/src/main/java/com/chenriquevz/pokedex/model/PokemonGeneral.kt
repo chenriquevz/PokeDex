@@ -11,22 +11,22 @@ import com.google.gson.annotations.SerializedName
 data class PokemonGeneral(
     @field:SerializedName("id") val id: Int,
     @field:SerializedName("name") val name: String,
-    @field:SerializedName("is_default") val isDefaault: Boolean,
+    @field:SerializedName("is_default") val isDefault: Boolean,
     @Embedded @field:SerializedName("species") val species: GeneralEntry,
     @Embedded @field:SerializedName("sprites") val sprites: Sprites
 ) {
 
     @Ignore
-    @field:SerializedName("abilities")
-    var abilities: List<AbilitiesList>? = emptyList()
+    @SerializedName("abilities")
+    var abilities: List<AbilitiesList> = emptyList()
 
     @Ignore
-    @field:SerializedName("stats")
-    var stats: List<Stats>? = emptyList()
+    @SerializedName("stats")
+    var stats: List<Stats> = emptyList()
 
     @Ignore
-    @field:SerializedName("types")
-    var type: List<Type>? = emptyList()
+    @SerializedName("types")
+    var type: List<Type> = emptyList()
 
 }
 
@@ -41,7 +41,7 @@ data class PokemonGeneral(
 )
 data class AbilitiesList(
     val id: Int,
-    @Embedded @field:SerializedName("ability") val general: GeneralEntry
+    @Embedded @field:SerializedName("ability") val ability: GeneralEntry
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "localID")
@@ -91,7 +91,7 @@ data class Stats(
 )
 data class Type(
     val id: Int,
-    @Embedded @field:SerializedName("type") val baseStat: GeneralEntry
+    @Embedded @field:SerializedName("type") val type: GeneralEntry
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "localID")

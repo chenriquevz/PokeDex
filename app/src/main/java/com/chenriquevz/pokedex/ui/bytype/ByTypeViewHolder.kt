@@ -1,4 +1,4 @@
-package com.chenriquevz.pokedex.ui.home
+package com.chenriquevz.pokedex.ui.bytype
 
 
 import android.annotation.SuppressLint
@@ -11,15 +11,17 @@ import com.bumptech.glide.Glide
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.databinding.ViewholderHomelistadapterBinding
 import com.chenriquevz.pokedex.model.PokemonByNumber
+import com.chenriquevz.pokedex.model.PokemonByType
+import com.chenriquevz.pokedex.ui.home.HomeFragmentDirections
 import com.chenriquevz.pokedex.utils.replaceDash
 import com.chenriquevz.pokedex.utils.urlPrimaryConverter
 import com.chenriquevz.pokedex.utils.urlSpritesConverter
 
-class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
+class ByTypeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("DefaultLocale")
-    fun bind(result: PokemonByNumber?) {
+    fun bind(result: PokemonByType?) {
         val context = binding.root.context
         if (result != null) {
             binding.homePokemonID.text =
@@ -41,23 +43,22 @@ class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
 
             binding.homeCard.setOnClickListener {
 
-                Navigation.findNavController(it)
-                    .navigate(HomeFragmentDirections.homeToPokemon(result.id))
+                Navigation.findNavController(it).navigate(ByTypeFragmentDirections.bytypeToPokemon(result.id))
 
             }
-        }
 
+        }
 
     }
 
     companion object {
-        fun create(parent: ViewGroup, viewType: Int): HomeViewHolder {
+        fun create(parent: ViewGroup, viewType: Int): ByTypeViewHolder {
             val binding = ViewholderHomelistadapterBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
-            return HomeViewHolder(binding)
+            return ByTypeViewHolder(binding)
         }
     }
 }

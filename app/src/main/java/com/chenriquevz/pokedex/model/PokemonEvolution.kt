@@ -28,7 +28,7 @@ data class PokemonEvolution(
 )
 data class EvolutionChainFirst(
     val id: Int,
-    @PrimaryKey val localID: Int,
+    @PrimaryKey val localID: Long,
     @Embedded val species: GeneralEntry
 ) {
     @Ignore
@@ -46,7 +46,7 @@ data class EvolutionChainFirst(
         Index("id", unique = false)]
 )
 data class EvolutionChainSecond(
-    val id: Int,
+    val id: Long,
     @Embedded val species: GeneralEntry
 ) {
     @PrimaryKey(autoGenerate = true)

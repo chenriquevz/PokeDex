@@ -41,7 +41,7 @@ interface PokemonService {
     @GET("evolution-chain/{id}")
     suspend fun pokemonEvolution(
         @Path("id") evolutionChain: String
-    ): Response<PokemonEvolution>
+    ): Response<PaginationEvolution>
 
     companion object {
         private const val BASE_URL = "https://pokeapi.co/api/v2/"

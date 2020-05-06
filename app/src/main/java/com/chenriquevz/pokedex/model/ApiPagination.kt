@@ -24,7 +24,6 @@ class PokemonList (
     @SerializedName("pokemon") val general: GeneralEntry
 )
 
-
 class PaginationEvolution (
     @SerializedName("id") val id: Int,
     @SerializedName("chain") val chain: PaginationEvolutionChain

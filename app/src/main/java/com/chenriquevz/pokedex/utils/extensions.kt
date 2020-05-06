@@ -1,19 +1,27 @@
 package com.chenriquevz.pokedex.utils
 
-import android.util.Log
+import android.content.Context
+import android.widget.Toast
+import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.model.GeneralEntry
 import com.chenriquevz.pokedex.model.PokemonByNumber
 
 fun List<GeneralEntry>.mapToDB() = this.map { entry ->
     PokemonByNumber(
-        entry.urlGeneral.stringToID(),
+        entry.urlGeneral.urlPokemonToID(),
         entry.nameGeneral,
         entry.urlGeneral
     )
 }
 
-fun String.stringToID() =
+fun String.urlPokemonToID() =
     this.removePrefix("https://pokeapi.co/api/v2/pokemon/").removeSuffix("/").toInt()
+
+fun String.urlTypetoID() =
+    this.removePrefix("https://pokeapi.co/api/v2/type/").removeSuffix("/").toInt()
+
+fun String.urlSpeciestoString() =
+    this.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/")
 
 fun Int.urlPrimaryConverter(): String {
 
@@ -28,3 +36,13 @@ fun Int.urlPrimaryConverter(): String {
 
 fun Int.urlSpritesConverter(): String =
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$this.png"
+
+fun String.replaceDash () = this.replace("-", " ")
+
+fun Context.toast(message: String) {
+    Toast.makeText(
+        this,
+        message,
+        Toast.LENGTH_SHORT
+    ).show()
+}

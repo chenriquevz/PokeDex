@@ -9,6 +9,60 @@
         android:id="@+id/navigation_home"
         android:name="com.chenriquevz.pokedex.ui.home.HomeFragment"
         tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/home_to_pokemon"
+            app:destination="@+id/navigation_pokemon">
+            <argument
+                android:name="pokemonID"
+                app:argType="integer"
+                app:nullable="false" />
+        </action>
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_pokemon"
+        android:name="com.chenriquevz.pokedex.ui.pokemon.PokemonFragment"
+
+        tools:layout="@layout/fragment_pokemon">
+        <argument
+            android:name="pokemonID"
+            app:argType="integer"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/pokemon_to_type"
+            app:destination="@+id/navigation_type">
+            <argument
+                android:name="pokemontype"
+                app:argType="integer"
+                app:nullable="false" />
+        </action>
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_type"
+        android:name="com.chenriquevz.pokedex.ui.bytype.ByTypeFragment"
+        android:label="Type"
+        tools:layout="@layout/fragment_bytype">
+        <argument
+            android:name="pokemontype"
+            app:argType="integer"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/bytype_to_pokemon"
+            app:destination="@+id/navigation_pokemon">
+            <argument
+                android:name="pokemonID"
+                app:argType="integer"
+                app:nullable="false" />
+        </action>
+
     </fragment>
 
 </navigation>

@@ -27,10 +27,7 @@ interface PokemonDao {
 
     @Transaction
     @Query("SELECT * FROM PokemonGeneral WHERE id = :id")
-    fun getGeneralID(id: Int): LiveData<List<PokemonGeneralRelation>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGeneralListByType(pokemonList: List<PokemonByType>)
+    fun getGeneralID(id: Int): LiveData<PokemonGeneralRelation>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGeneralID(pokemon: PokemonGeneral)
@@ -56,7 +53,7 @@ interface PokemonDao {
 
     @Transaction
     @Query("SELECT * FROM PokemonSpecies WHERE id = :id")
-    fun getPokemonSpecies(id: Int): LiveData<List<PokemonSpeciesRelation>>
+    fun getPokemonSpecies(id: Int): LiveData<PokemonSpeciesRelation>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPokemonSpecies(pokemon: PokemonSpecies)
@@ -72,9 +69,9 @@ interface PokemonDao {
     suspend fun insertPokemonEvolutions(pokemon: PokemonEvolution)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPokemonEvolutionsFirst(pokemon: EvolutionChainFirst)
+    suspend fun insertPokemonEvolutionsFirst(pokemon: List<EvolutionChainFirst>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPokemonEvolutionsSecond(pokemon: EvolutionChainSecond)
+    suspend fun insertPokemonEvolutionsSecond(pokemon: List<EvolutionChainSecond>)
 
 }
