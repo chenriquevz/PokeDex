@@ -22,5 +22,4 @@ class AppModule {
     @Provides
     fun provideRetroFit() = PokemonService.create()
 
-
 }

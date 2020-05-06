@@ -15,7 +15,6 @@ class HomeListAdapter : ListAdapter<PokemonByNumber, RecyclerView.ViewHolder>(RE
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        //holder.setIsRecyclable(false)
         val repoItem = getItem(position)
 
 

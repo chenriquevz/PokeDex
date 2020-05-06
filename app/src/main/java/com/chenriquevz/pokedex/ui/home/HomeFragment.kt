@@ -64,6 +64,17 @@ class HomeFragment : Fragment(), Injectable {
             }
         })
 
+        recyclerView?.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val totalItemCount = layout.itemCount
+                val visibleItemCount = layout.childCount
+                val lastVisibleItem = layout.findLastVisibleItemPosition()
+
+                homeViewModel.listScrolled(visibleItemCount, lastVisibleItem, totalItemCount)
+            }
+        })
+
     }
 
     override fun onDestroyView() {

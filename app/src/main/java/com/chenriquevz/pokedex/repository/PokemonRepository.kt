@@ -1,5 +1,6 @@
 package com.chenriquevz.pokedex.repository
 
+import android.util.Log
 import com.chenriquevz.pokedex.api.PokemonService
 import com.chenriquevz.pokedex.data.PokemonDao
 import com.chenriquevz.pokedex.repository.GetResult.getResult
@@ -14,11 +15,13 @@ class PokemonRepository @Inject constructor(
 
     private var lastRequestedPage = 0
 
-    fun searchByNumber() {
-        lastRequestedPage.plus(20)
+    private fun searchByNumber() {
+        Log.d("homefrag", lastRequestedPage.toString())
+        lastRequestedPage = 20
+        Log.d("homefrag", lastRequestedPage.toString())
     }
 
-    val listByNumber = resultLiveData(
+    fun listByNumber() = resultLiveData(
         networkCall = {
             getResult {
                 pokemonApi.pokemonListByNumber(
@@ -27,9 +30,9 @@ class PokemonRepository @Inject constructor(
                 )
             }
         },
-        saveCallResult = { dao.insertListByNumber(it.results.mapToDB())},
-        databaseQuery = { dao.getListByNumber() }
+        saveCallResult = { dao.insertListByNumber(it.results.mapToDB()) },
+        databaseQuery = { dao.getListByNumber() },
+        incrementPage = { searchByNumber() }
     )
 
 }
-

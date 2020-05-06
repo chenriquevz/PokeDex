@@ -11,7 +11,8 @@ object GetResult {
     fun <T, A> resultLiveData(
         databaseQuery: () -> LiveData<T>,
         networkCall: suspend () -> Result<A>,
-        saveCallResult: suspend (A) -> Unit
+        saveCallResult: suspend (A) -> Unit,
+        incrementPage: () -> Unit
     ): LiveData<Result<T>> =
         liveData(Dispatchers.IO) {
             emit(Result.loading<T>())
@@ -25,6 +26,7 @@ object GetResult {
             val responseStatus = networkCall.invoke()
             if (responseStatus.status == Result.Status.SUCCESS) {
                 saveCallResult(responseStatus.data!!)
+                incrementPage()
             } else if (responseStatus.status == Result.Status.ERROR) {
                 emit(
                     Result.error<T>(
