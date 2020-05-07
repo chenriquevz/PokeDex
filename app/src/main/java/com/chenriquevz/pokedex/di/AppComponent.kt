@@ -4,6 +4,7 @@ import android.app.Application
 import com.chenriquevz.pokedex.PokeDexApplication
 import com.chenriquevz.pokedex.ui.bytype.ByTypeViewModel
 import com.chenriquevz.pokedex.ui.pokemon.PokemonViewModel
+import com.chenriquevz.pokedex.ui.pokemon.dialogability.DialogAbilityViewModel
 import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.BindsInstance
 import dagger.Component
@@ -26,6 +27,7 @@ interface AppComponent {
 
     val pokemonViewModelFactory: PokemonViewModel.Factory
     val typeViewModelFactory: ByTypeViewModel.Factory
+    val dialogAbilityViewModelFactory: DialogAbilityViewModel.Factory
 
     fun inject(app: PokeDexApplication)
 

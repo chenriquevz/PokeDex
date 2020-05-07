@@ -1,8 +1,10 @@
 package com.chenriquevz.pokedex.di
 
+import androidx.fragment.app.DialogFragment
 import com.chenriquevz.pokedex.ui.bytype.ByTypeFragment
 import com.chenriquevz.pokedex.ui.home.HomeFragment
 import com.chenriquevz.pokedex.ui.pokemon.PokemonFragment
+import com.chenriquevz.pokedex.ui.pokemon.dialogability.AbilityDialogFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -18,5 +20,8 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeByTypeFragment(): ByTypeFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeDialogAbilityFragment(): AbilityDialogFragment
 
 }

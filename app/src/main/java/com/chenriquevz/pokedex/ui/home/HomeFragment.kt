@@ -103,7 +103,7 @@ class HomeFragment : Fragment(), Injectable {
             override fun onQueryTextSubmit(query: String): Boolean {
 
                 if (query.isNotEmpty()) {
-                    val action = HomeFragmentDirections.homeToPokemon(query.toInt())
+                    val action = HomeFragmentDirections.homeToPokemon(query)
                     navController.navigate(action)
                 } else {
                     _context.toast(getString(R.string.search_error))

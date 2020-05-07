@@ -13,7 +13,7 @@ data class PokemonGeneral(
     @field:SerializedName("name") val name: String,
     @field:SerializedName("is_default") val isDefault: Boolean,
     @Embedded @field:SerializedName("species") val species: GeneralEntry,
-    @Embedded @field:SerializedName("sprites") val sprites: Sprites
+    @Embedded @field:SerializedName("sprites") val sprites: Sprites?
 ) {
 
     @Ignore

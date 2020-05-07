@@ -43,7 +43,7 @@ class ByTypeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
 
             binding.homeCard.setOnClickListener {
 
-                Navigation.findNavController(it).navigate(ByTypeFragmentDirections.bytypeToPokemon(result.id))
+                Navigation.findNavController(it).navigate(ByTypeFragmentDirections.bytypeToPokemon(result.id.toString()))
 
             }
 

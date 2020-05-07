@@ -1,13 +1,19 @@
 package com.chenriquevz.pokedex.repository
 
 import android.util.Log
+import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.LiveData
 import com.chenriquevz.pokedex.api.PokemonService
 import com.chenriquevz.pokedex.data.PokemonDao
+import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
 import com.chenriquevz.pokedex.model.*
 import com.chenriquevz.pokedex.repository.GetResult.getResult
+import com.chenriquevz.pokedex.repository.GetResult.loadLiveData
+import com.chenriquevz.pokedex.repository.GetResult.resultGeneralLiveData
+import com.chenriquevz.pokedex.repository.GetResult.resultGeneralVarieties
 import com.chenriquevz.pokedex.repository.GetResult.resultLiveData
-import com.chenriquevz.pokedex.utils.mapToDB
-import com.chenriquevz.pokedex.utils.urlPokemonToID
+import com.chenriquevz.pokedex.repository.GetResult.speciesLiveData
+import com.chenriquevz.pokedex.utils.*
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
@@ -16,6 +22,12 @@ class PokemonRepository @Inject constructor(
 ) {
 
     private var lastRequestedPage = 0
+
+
+    fun getAbility(ability: Int) = dao.getPokemonAbilities(ability)
+    fun getPokemon(id: String) = dao.getGeneral(id)
+    fun getEvolution(id: Int) = dao.getPokemonEvolutions(id)
+    fun getSpecies(id: Int) = dao.getPokemonSpecies(id)
 
     private fun searchByNumber() {
         Log.d("homefrag", lastRequestedPage.toString())
@@ -36,11 +48,22 @@ class PokemonRepository @Inject constructor(
         databaseQuery = { dao.getListByNumber() }
     )
 
-    fun pokemonGeneral(id: String) = resultLiveData(
-        networkCall = { getResult { pokemonApi.searchNameOrNumber(id) } },
-        saveCallResult = { pokemonGeneralInsert(it) },
-        databaseQuery = { dao.getGeneralID(id.toInt()) }
-    )
+
+    fun pokemonGeneral(id: String): LiveData<Result<PokemonGeneralRelation>> {
+
+        var databaseQuery = dao.getGeneral(id)
+        if (id.isDigitsOnly()) {
+            databaseQuery = dao.getGeneral(id.toInt())
+        }
+
+        return resultGeneralLiveData(
+            networkCall = { getResult { pokemonApi.searchNameOrNumber(id) } },
+            saveCallResult = { pokemonGeneralInsert(it) },
+            databaseQuery = { databaseQuery },
+            recursiveAbility = { abilityBulk(it.abilities.map { entry -> entry.ability.urlGeneral.urlAbilitytoInt() }) },
+            recursiveSpecies = { speciesBulk(id, it.species.urlGeneral.urlSpeciestoString().toString()) }
+        )
+    }
 
     private suspend fun pokemonGeneralInsert(pokemon: PokemonGeneral) {
 
@@ -56,13 +79,7 @@ class PokemonRepository @Inject constructor(
         })
     }
 
-    fun pokemonSpecies(id: String) = resultLiveData(
-        networkCall = { getResult { pokemonApi.pokemonSpecies(id) } },
-        saveCallResult = { pokemonSpecies(it) },
-        databaseQuery = { dao.getPokemonSpecies(id.toInt()) }
-    )
-
-    private suspend fun pokemonSpecies(species: PokemonSpecies) {
+    private suspend fun pokemonSpeciesInsert(species: PokemonSpecies) {
 
         dao.insertPokemonSpecies(species)
         dao.insertPokemonSpeciesVarieties(species.varieties.map {
@@ -75,13 +92,12 @@ class PokemonRepository @Inject constructor(
 
     }
 
-    fun pokemonEvolution(chainID: String) = resultLiveData(
+    private suspend fun pokemonEvolution(chainID: String) = loadLiveData(
         networkCall = { getResult { pokemonApi.pokemonEvolution(chainID) } },
-        saveCallResult = { pokemonEvolution(it) },
-        databaseQuery = { dao.getPokemonEvolutions(chainID.toInt()) }
+        saveCallResult = { pokemonEvolutionInsert(it) }
     )
 
-    private suspend fun pokemonEvolution(evolution: PaginationEvolution) {
+    private suspend fun pokemonEvolutionInsert(evolution: PaginationEvolution) {
 
         dao.insertPokemonEvolutions(PokemonEvolution(evolution.id, evolution.chain.species))
 
@@ -145,4 +161,75 @@ class PokemonRepository @Inject constructor(
         },
         databaseQuery = { dao.getListByType(type) }
     )
+
+    private suspend fun speciesBulk(pokemonID: String, speciesID: String) = speciesLiveData(
+        networkCall = { getResult { pokemonApi.pokemonSpecies(speciesID) } },
+        saveCallResult = { pokemonSpeciesInsert(it) },
+        recursiveEvolution = { pokemonEvolution(it.evolutionChain.url.urlEvolutiontoString()) },
+        recursiveVarieties = {
+            varietiesBulk(
+                pokemonID,
+                it.varieties.map { pokemon -> pokemon.pokemonVariety.urlGeneral.urlPokemonToID() })
+        }
+    )
+
+
+    private suspend fun varietiesBulk(pokemonID: String, speciesID: List<Int>) {
+
+        for (pokemon in speciesID) {
+            if (pokemon != pokemonID.toInt()) {
+                resultGeneralVarieties(
+                    networkCall = {
+                        getResult {
+                            pokemonApi.searchNameOrNumber(pokemon.toString())
+                        }
+                    },
+                    saveCallResult = {
+                        pokemonGeneralInsert(it)
+                    },
+                    recursiveAbility = {
+                        abilityBulk(it.abilities.map { entry ->
+                            entry.ability.urlGeneral.urlAbilitytoInt()
+                        }
+                        )
+                    }
+                )
+            }
+
+        }
+    }
+
+    private suspend fun abilityBulk(ability: List<Int>) {
+        for (entry in ability) {
+            loadLiveData(
+                networkCall = {
+                    getResult {
+                        pokemonApi.pokemonAbility(
+                            entry.toString()
+                        )
+                    }
+                },
+                saveCallResult = {
+                    abilityInsert(it)
+                }
+            )
+        }
+
+
+    }
+
+
+
+
+    private suspend fun abilityInsert(ability: PokemonAbility) {
+
+        dao.insertPokemonAbility(ability)
+        dao.insertPokemonAbilityEffect(
+            AbilityEffectEntries(
+                ability.id,
+                ability.effectEntries?.firstOrNull()?.effect,
+                ability.effectEntries?.firstOrNull()?.shortEffect
+            )
+        )
+    }
 }

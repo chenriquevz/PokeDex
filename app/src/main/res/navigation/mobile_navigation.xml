@@ -15,7 +15,7 @@
             app:destination="@+id/navigation_pokemon">
             <argument
                 android:name="pokemonID"
-                app:argType="integer"
+                app:argType="string"
                 app:nullable="false" />
         </action>
 
@@ -29,7 +29,7 @@
         tools:layout="@layout/fragment_pokemon">
         <argument
             android:name="pokemonID"
-            app:argType="integer"
+            app:argType="string"
             app:nullable="false" />
 
         <action
@@ -37,6 +37,15 @@
             app:destination="@+id/navigation_type">
             <argument
                 android:name="pokemontype"
+                app:argType="integer"
+                app:nullable="false" />
+        </action>
+
+        <action
+            android:id="@+id/pokemon_to_ability"
+            app:destination="@+id/navigation_dialogability">
+            <argument
+                android:name="ability"
                 app:argType="integer"
                 app:nullable="false" />
         </action>
@@ -59,10 +68,21 @@
             app:destination="@+id/navigation_pokemon">
             <argument
                 android:name="pokemonID"
-                app:argType="integer"
+                app:argType="string"
                 app:nullable="false" />
         </action>
 
     </fragment>
+
+    <dialog
+        android:id="@+id/navigation_dialogability"
+        android:name="com.chenriquevz.pokedex.ui.pokemon.dialogability.AbilityDialogFragment"
+        tools:layout="@layout/fragment_dialogabilities">
+        <argument
+            android:name="ability"
+            app:argType="integer"
+            app:nullable="false" />
+
+    </dialog>
 
 </navigation>

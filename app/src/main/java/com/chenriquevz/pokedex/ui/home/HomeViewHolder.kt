@@ -42,7 +42,7 @@ class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
             binding.homeCard.setOnClickListener {
 
                 Navigation.findNavController(it)
-                    .navigate(HomeFragmentDirections.homeToPokemon(result.id))
+                    .navigate(HomeFragmentDirections.homeToPokemon(result.id.toString()))
 
             }
         }

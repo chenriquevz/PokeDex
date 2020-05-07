@@ -14,7 +14,7 @@ data class PokemonAbility (
 ) {
     @Ignore
     @field:SerializedName("effect_entries")
-    val effectEntries: List<AbilityEffectEntries>? = emptyList()
+    var effectEntries: List<AbilityEffectEntries>? = emptyList()
 }
 
 @Entity(
@@ -28,8 +28,8 @@ data class PokemonAbility (
 )
 data class AbilityEffectEntries(
     val id: Int,
-    @field:SerializedName("effect") val effect: String,
-    @field:SerializedName("short_effect") val shortEffect: String
+    @field:SerializedName("effect") val effect: String?,
+    @field:SerializedName("short_effect") val shortEffect: String?
 ){
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "localID")

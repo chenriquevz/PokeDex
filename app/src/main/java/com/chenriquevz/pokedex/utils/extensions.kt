@@ -21,7 +21,13 @@ fun String.urlTypetoID() =
     this.removePrefix("https://pokeapi.co/api/v2/type/").removeSuffix("/").toInt()
 
 fun String.urlSpeciestoString() =
-    this.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/")
+    this.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/").toInt()
+
+fun String.urlAbilitytoInt() =
+    this.removePrefix("https://pokeapi.co/api/v2/ability/").removeSuffix("/").toInt()
+
+fun String.urlEvolutiontoString() =
+    this.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/")
 
 fun Int.urlPrimaryConverter(): String {
 
