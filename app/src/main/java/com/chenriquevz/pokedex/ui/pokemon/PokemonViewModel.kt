@@ -1,9 +1,7 @@
 package com.chenriquevz.pokedex.ui.pokemon
 
 import android.util.Log
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.chenriquevz.pokedex.repository.PokemonRepository
 import com.chenriquevz.pokedex.repository.Result
 import com.chenriquevz.pokedex.utils.urlAbilitytoInt
@@ -25,12 +23,25 @@ class PokemonViewModel @AssistedInject constructor(
     }
 
 
-    val pokemon = repository.pokemonGeneral(id)
+    private val _selectedSpecies = MutableLiveData<Int>()
+    val selectedSpecies: LiveData<Int> = _selectedSpecies
 
-    fun pokemonVarieties(variety: String) = repository.getPokemon(variety)
-    fun getSpecies(id: Int) = repository.getSpecies(id)
+    fun updateSelectedSpecies(newSelection: Int) {
+        _selectedSpecies.postValue(newSelection)
+    }
+
+    private val _viewPagerSelected = MutableLiveData<Int>()
+    val viewPagerSelected: LiveData<Int> = _viewPagerSelected
+
+    fun updatePageSelected(newSelection: Int) {
+        _viewPagerSelected.postValue(newSelection)
+    }
+
+    val pokemon = repository.pokemonGeneral(id)
+    fun pokemonVarieties(variety: Int) = repository.getPokemon(variety)
 
     val species = Transformations.switchMap(pokemon) {
+        Log.d("pokefrag", "viewmodel $it")
         repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral!!.urlSpeciestoString())
     }
 

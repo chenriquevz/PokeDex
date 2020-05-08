@@ -25,7 +25,7 @@ class PokemonRepository @Inject constructor(
 
 
     fun getAbility(ability: Int) = dao.getPokemonAbilities(ability)
-    fun getPokemon(id: String) = dao.getGeneral(id)
+    fun getPokemon(id: Int) = dao.getGeneral(id)
     fun getEvolution(id: Int) = dao.getPokemonEvolutions(id)
     fun getSpecies(id: Int) = dao.getPokemonSpecies(id)
 
@@ -177,7 +177,7 @@ class PokemonRepository @Inject constructor(
     private suspend fun varietiesBulk(pokemonID: String, speciesID: List<Int>) {
 
         for (pokemon in speciesID) {
-            if (pokemon != pokemonID.toInt()) {
+            if (pokemon.toString() != pokemonID) {
                 resultGeneralVarieties(
                     networkCall = {
                         getResult {

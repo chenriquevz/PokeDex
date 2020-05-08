@@ -1,6 +1,8 @@
 package com.chenriquevz.pokedex.model
 
+import android.annotation.SuppressLint
 import androidx.room.*
+import com.chenriquevz.pokedex.utils.replaceDash
 import com.google.gson.annotations.SerializedName
 
 @Entity(
@@ -39,4 +41,10 @@ data class PokemonVarieties(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "localID")
     var localID: Int = 0
+
+    @SuppressLint("DefaultLocale")
+    override fun toString(): String {
+        return pokemonVariety.nameGeneral.replaceDash()
+            .capitalize()
+    }
 }

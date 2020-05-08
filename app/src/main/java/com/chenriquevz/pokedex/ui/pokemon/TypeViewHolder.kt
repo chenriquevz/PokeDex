@@ -21,7 +21,7 @@ class TypeViewHolder(private val binding: ViewholderTypeBinding) :
             binding.pokemonType.text = result.type.nameGeneral.capitalize()
 
         binding.pokemonType.setOnClickListener {
-            Navigation.findNavController(it).navigate(PokemonFragmentDirections.pokemonToType(result.type.urlGeneral.urlTypetoID()))
+            Navigation.findNavController(it).navigate(PokemonFragmentDirections.pokemonToType(result.type.urlGeneral.urlTypetoID(), result.type.nameGeneral.capitalize()))
         }
 
         }

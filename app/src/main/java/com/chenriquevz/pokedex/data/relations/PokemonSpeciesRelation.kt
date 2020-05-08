@@ -18,4 +18,5 @@ class PokemonSpeciesRelation {
     )
     var pokemonVarieties: List<PokemonVarieties> = emptyList()
 
+
 }

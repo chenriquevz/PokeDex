@@ -40,15 +40,35 @@ fun Int.urlPrimaryConverter(): String {
     return "https://assets.pokemon.com/assets/cms2/img/pokedex/full/$format.png"
 }
 
+fun Int.urlVarietyConverter(variety: Int): String {
+
+    val numberToString = this.toString()
+    val format = when (numberToString.length) {
+        1 -> "00$numberToString"
+        2 -> "0$numberToString"
+        else -> numberToString
+    }
+    return "https://assets.pokemon.com/assets/cms2/img/pokedex/full/${format}_f$variety.png"
+}
+
 fun Int.urlSpritesConverter(): String =
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$this.png"
 
 fun String.replaceDash () = this.replace("-", " ")
+fun Int.insertDash () = this.toString().replace(" ", "-")
 
 fun Context.toast(message: String) {
     Toast.makeText(
         this,
         message,
         Toast.LENGTH_SHORT
+    ).show()
+}
+
+fun Context.toastLong(message: String) {
+    Toast.makeText(
+        this,
+        message,
+        Toast.LENGTH_LONG
     ).show()
 }

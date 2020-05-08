@@ -1,5 +1,6 @@
 package com.chenriquevz.pokedex.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
@@ -28,7 +29,7 @@ object GetResult {
             val responseStatus = networkCall.invoke()
             if (responseStatus.status == Result.Status.SUCCESS) {
                 saveCallResult(responseStatus.data!!)
-            } else if (responseStatus.status == Result.Status.ERROR) {
+            } else if (responseStatus.status == Result.Status.ERROR && source.value?.data == null) {
                 emit(
                     Result.error<T>(
                         responseStatus.message!!
@@ -59,7 +60,7 @@ object GetResult {
                 saveCallResult(responseStatus.data!!)
                 recursiveAbility(responseStatus.data)
                 recursiveSpecies(responseStatus.data)
-            } else if (responseStatus.status == Result.Status.ERROR) {
+            } else if (responseStatus.status == Result.Status.ERROR && source.value?.data == null) {
                 emit(
                     Result.error<T>(
                         responseStatus.message!!
@@ -131,7 +132,15 @@ object GetResult {
     }
 
     private fun <T> error(message: String): Result<T> {
-        return Result.error("Network call has failed for a following reason: $message")
+        var newMessage = message
+        Log.d("error", message)
+        when {
+            message.contains("404") -> {
+                newMessage = "Pokemon not found."
+            }
+        }
+
+        return Result.error("Network call has failed for a following reason: $newMessage")
     }
 
 }

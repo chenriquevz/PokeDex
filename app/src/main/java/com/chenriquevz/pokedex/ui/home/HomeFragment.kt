@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import com.chenriquevz.pokedex.databinding.FragmentHomeBinding
 import com.chenriquevz.pokedex.di.Injectable
 import com.chenriquevz.pokedex.repository.Result
 import com.chenriquevz.pokedex.utils.toast
+import com.chenriquevz.pokedex.utils.toastLong
 import javax.inject.Inject
 
 class HomeFragment : Fragment(), Injectable {
@@ -25,6 +27,7 @@ class HomeFragment : Fragment(), Injectable {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var _context: Context
     private lateinit var searchView: SearchView
+    private lateinit var progressBar: ProgressBar
     private var _binding: FragmentHomeBinding? = null
 
     override fun onCreateView(
@@ -34,12 +37,12 @@ class HomeFragment : Fragment(), Injectable {
     ): View? {
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        progressBar = _binding?.homeProgressbar!!
 
         val rootView = _binding?.root
         _context = rootView!!.context
 
         setHasOptionsMenu(true)
-
         setRecyclerView()
 
         return rootView
@@ -56,14 +59,17 @@ class HomeFragment : Fragment(), Injectable {
 
         homeViewModel.listByNumber.observe(viewLifecycleOwner, Observer { result ->
 
-            Log.d("homeFrag", "$result")
             when (result.status) {
                 Result.Status.SUCCESS -> {
+                    progressBar.visibility = View.GONE
                     homeListAdapter.submitList(result.data)
                 }
                 Result.Status.LOADING -> {
+                    progressBar.visibility = View.VISIBLE
                 }
                 Result.Status.ERROR -> {
+                    progressBar.visibility = View.GONE
+                    _context.toastLong(result.message!!)
                 }
             }
         })
