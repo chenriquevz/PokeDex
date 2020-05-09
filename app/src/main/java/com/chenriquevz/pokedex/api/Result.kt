@@ -1,4 +1,4 @@
-package com.chenriquevz.pokedex.repository
+package com.chenriquevz.pokedex.api
 
 data class Result<out T>(val status: Status, val data: T?, val message: String?) {
 

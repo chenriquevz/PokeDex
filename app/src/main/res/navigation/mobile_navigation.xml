@@ -33,6 +33,17 @@
             app:argType="string"
             app:nullable="false" />
 
+
+        <action
+            android:id="@+id/navigation_pokemon"
+            app:destination="@+id/navigation_pokemon">
+            <argument
+                android:name="pokemonID"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
+
+
         <action
             android:id="@+id/pokemon_to_type"
             app:destination="@+id/navigation_type">

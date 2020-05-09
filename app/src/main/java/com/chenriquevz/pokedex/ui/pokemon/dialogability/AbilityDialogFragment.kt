@@ -1,7 +1,6 @@
 package com.chenriquevz.pokedex.ui.pokemon.dialogability
 
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import com.chenriquevz.pokedex.databinding.FragmentDialogabilitiesBinding
 import com.chenriquevz.pokedex.di.Injectable
 import com.chenriquevz.pokedex.di.injector
 import com.chenriquevz.pokedex.di.viewModel
-import com.chenriquevz.pokedex.repository.Result
 
 class AbilityDialogFragment : DialogFragment(), Injectable {
 

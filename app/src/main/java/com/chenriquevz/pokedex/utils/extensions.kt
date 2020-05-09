@@ -29,6 +29,9 @@ fun String.urlAbilitytoInt() =
 fun String.urlEvolutiontoString() =
     this.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/")
 
+fun String.urlEvolutiontoInt() =
+    this.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/").toInt()
+
 fun Int.urlPrimaryConverter(): String {
 
     val numberToString = this.toString()

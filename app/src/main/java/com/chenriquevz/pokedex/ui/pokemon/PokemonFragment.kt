@@ -11,11 +11,12 @@ import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
 import com.chenriquevz.pokedex.data.relations.PokemonSpeciesRelation
@@ -23,10 +24,11 @@ import com.chenriquevz.pokedex.databinding.FragmentPokemonBinding
 import com.chenriquevz.pokedex.di.Injectable
 import com.chenriquevz.pokedex.di.injector
 import com.chenriquevz.pokedex.di.viewModel
-import com.chenriquevz.pokedex.model.PokemonSpecies
 import com.chenriquevz.pokedex.model.PokemonVarieties
-import com.chenriquevz.pokedex.repository.Result
+import com.chenriquevz.pokedex.api.Result
+import com.chenriquevz.pokedex.data.relations.PokemonEvolutionRelation
 import com.chenriquevz.pokedex.ui.pokemon.carrossel.CarrosselAdapter
+import com.chenriquevz.pokedex.ui.pokemon.evolution.EvolutionListAdapter
 import com.chenriquevz.pokedex.utils.*
 
 @SuppressLint("DefaultLocale")
@@ -102,6 +104,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
                         populateBasic(result.data)
                         populateImages(result.data)
 
+
                         pokemonViewModel.species
                             .observe(viewLifecycleOwner, Observer { species ->
 
@@ -110,6 +113,15 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
                                     _binding?.pokemonConstraint?.visibility = View.VISIBLE
 
                                     populateSpecies(result.data, species)
+
+                                    pokemonViewModel.evolutionChain.observe(
+                                        viewLifecycleOwner,
+                                        Observer { evolution ->
+
+                                            if (evolution != null) {
+                                                populateEvolution(evolution)
+                                            }
+                                        })
 
                                 }
 
@@ -303,6 +315,48 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         }
 
     }
+
+
+    private fun populateEvolution(evolutionChain: PokemonEvolutionRelation) {
+
+        _binding?.pokemonEvolutionFirstName?.text = evolutionChain.pokemonBase?.species?.nameGeneral
+
+        Glide.with(_context)
+            .load(evolutionChain.pokemonBase?.species?.urlGeneral?.urlSpeciestoInt()?.urlPrimaryConverter())
+            .fitCenter()
+            .placeholder(R.drawable.ic_pokemonloading)
+            .into(_binding!!.pokemonEvolutionFirst)
+
+
+        _binding?.pokemonEvolutionFirst?.setOnClickListener {
+            Navigation.findNavController(it).navigate(
+                PokemonFragmentDirections.navigationPokemon(
+                    evolutionChain.pokemonBase?.species?.urlGeneral!!.urlSpeciestoInt().toString()
+                )
+            )
+        }
+
+
+        val firstEvolutionCount = if (evolutionChain.pokemonChainFirst.size > 2) 4 else evolutionChain.pokemonChainFirst.size
+        if (firstEvolutionCount > 0) {
+            _binding?.pokemonEvolutionArrow?.visibility = View.VISIBLE
+            val recyclerViewEvolution = _binding?.pokemonEvolutionRecycler
+            val layoutType =
+                GridLayoutManager(
+                    _context,
+                    firstEvolutionCount,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
+            val evolutionListAdapter = EvolutionListAdapter()
+            recyclerViewEvolution?.adapter = evolutionListAdapter
+            recyclerViewEvolution?.layoutManager = layoutType
+
+            evolutionListAdapter.submitList(evolutionChain.pokemonChainFirst)
+        }
+
+    }
+
 
 
     override fun onDestroyView() {

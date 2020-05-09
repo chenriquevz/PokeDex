@@ -1,0 +1,82 @@
+package com.chenriquevz.pokedex.ui.pokemon.evolution
+
+
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.chenriquevz.pokedex.R
+import com.chenriquevz.pokedex.data.relations.PokemonFirstToSecondChain
+import com.chenriquevz.pokedex.databinding.ViewholderEvolutionBinding
+
+import com.chenriquevz.pokedex.databinding.ViewholderTypeBinding
+import com.chenriquevz.pokedex.model.EvolutionChainFirst
+import com.chenriquevz.pokedex.model.Type
+import com.chenriquevz.pokedex.ui.pokemon.PokemonFragmentDirections
+import com.chenriquevz.pokedex.ui.pokemon.evolution.second.SecondEvolutionListAdapter
+import com.chenriquevz.pokedex.utils.urlPokemonToID
+import com.chenriquevz.pokedex.utils.urlPrimaryConverter
+import com.chenriquevz.pokedex.utils.urlSpeciestoInt
+import com.chenriquevz.pokedex.utils.urlTypetoID
+
+class EvolutionViewHolder(private val binding: ViewholderEvolutionBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+
+    @SuppressLint("DefaultLocale")
+    fun bind(result: PokemonFirstToSecondChain?) {
+        val context = binding.root.context
+        if (result != null) {
+
+            binding.pokemonEvolutionSecondName.text =
+                result.pokemonFirst?.species?.nameGeneral?.capitalize()
+            Glide.with(context)
+                .load(
+                    result.pokemonFirst?.species?.urlGeneral?.urlSpeciestoInt()
+                        ?.urlPrimaryConverter()
+                )
+                .fitCenter()
+                .placeholder(R.drawable.ic_pokemonloading)
+                .into(binding.pokemonEvolutionSecond)
+
+            binding.pokemonEvolutionArrow.visibility = View.VISIBLE
+            val recyclerViewEvolution = binding.pokemonEvolutionRecycler
+            val layoutType =
+                GridLayoutManager(
+                    context,
+                    result.pokemonSecond.size,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
+            val evolutionListAdapter = SecondEvolutionListAdapter()
+            recyclerViewEvolution.adapter = evolutionListAdapter
+            recyclerViewEvolution.layoutManager = layoutType
+
+            evolutionListAdapter.submitList(result.pokemonSecond)
+
+
+            binding.pokemonEvolutionSecond.setOnClickListener {
+                Navigation.findNavController(it).navigate(PokemonFragmentDirections.navigationPokemon(result.pokemonFirst?.species?.urlGeneral!!.urlSpeciestoInt().toString()))
+            }
+
+
+        }
+
+
+    }
+
+    companion object {
+        fun create(parent: ViewGroup, viewType: Int): EvolutionViewHolder {
+            val binding = ViewholderEvolutionBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+            return EvolutionViewHolder(binding)
+        }
+    }
+}

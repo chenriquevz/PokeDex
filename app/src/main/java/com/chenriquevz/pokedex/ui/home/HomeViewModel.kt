@@ -9,7 +9,7 @@ import com.chenriquevz.pokedex.repository.PokemonRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(val repository: PokemonRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(repository: PokemonRepository) : ViewModel() {
 
     private val pokemonList = repository.listByNumber(viewModelScope)
 

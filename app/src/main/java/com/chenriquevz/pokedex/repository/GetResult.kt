@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
-import com.chenriquevz.pokedex.model.PokemonSpecies
-import kotlinx.coroutines.CoroutineScope
+import com.chenriquevz.pokedex.api.Result
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import retrofit2.Response
 
 object GetResult {

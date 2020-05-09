@@ -72,7 +72,7 @@ interface PokemonDao {
 
     @Transaction
     @Query("SELECT * FROM PokemonEvolution WHERE id = :id")
-    fun getPokemonEvolutions(id: Int): LiveData<List<PokemonEvolutionRelation>>
+    fun getPokemonEvolutions(id: Int): LiveData<PokemonEvolutionRelation>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPokemonEvolutions(pokemon: PokemonEvolution)

@@ -2,7 +2,6 @@ package com.chenriquevz.pokedex.ui.bytype
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chenriquevz.pokedex.databinding.FragmentBytypeBinding
-import com.chenriquevz.pokedex.databinding.FragmentPokemonBinding
 import com.chenriquevz.pokedex.di.Injectable
 import com.chenriquevz.pokedex.di.injector
 import com.chenriquevz.pokedex.di.viewModel
-import com.chenriquevz.pokedex.repository.Result
-import com.chenriquevz.pokedex.ui.home.HomeListAdapter
-import com.chenriquevz.pokedex.ui.pokemon.TypeListAdapter
+import com.chenriquevz.pokedex.api.Result
 import com.chenriquevz.pokedex.utils.toastLong
 
 class ByTypeFragment : Fragment(), Injectable {

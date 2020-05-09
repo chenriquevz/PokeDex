@@ -31,15 +31,5 @@ class PaginationEvolution (
 
 class PaginationEvolutionChain(
     @SerializedName("species") val species: GeneralEntry,
-    @SerializedName("evolves_to") val evolvesTo: List<PaginationEvolutionChainSecond>? = null
-)
-
-class PaginationEvolutionChainSecond(
-    @SerializedName("species") val species: GeneralEntry,
-    @SerializedName("evolves_to") val evolvesTo: List<PaginationEvolutionChainThird>? = null
-)
-
-class PaginationEvolutionChainThird(
-    @SerializedName("species") val species: GeneralEntry,
-    @SerializedName("evolves_to") val evolvesTo: List<String>? = null
+    @SerializedName("evolves_to") val evolvesTo: List<PaginationEvolutionChain>? = null
 )

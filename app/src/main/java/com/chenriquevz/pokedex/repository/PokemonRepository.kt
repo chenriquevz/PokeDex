@@ -1,12 +1,10 @@
 package com.chenriquevz.pokedex.repository
 
-import android.util.Log
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import com.chenriquevz.pokedex.api.PokemonService
+import com.chenriquevz.pokedex.api.Result
 import com.chenriquevz.pokedex.data.PokemonDao
 import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
 import com.chenriquevz.pokedex.model.*
@@ -18,7 +16,6 @@ import com.chenriquevz.pokedex.repository.GetResult.resultLiveData
 import com.chenriquevz.pokedex.repository.GetResult.speciesLiveData
 import com.chenriquevz.pokedex.ui.home.HomeBoundaryCallBack
 import com.chenriquevz.pokedex.utils.*
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
@@ -32,7 +29,6 @@ class PokemonRepository @Inject constructor(
     fun getPokemon(id: Int) = dao.getGeneral(id)
     fun getEvolution(id: Int) = dao.getPokemonEvolutions(id)
     fun getSpecies(id: Int) = dao.getPokemonSpecies(id)
-
 
 
     fun listByNumber(coroutineScope: CoroutineScope): PokemonByNumberPaged {
@@ -109,38 +105,91 @@ class PokemonRepository @Inject constructor(
         dao.insertPokemonEvolutions(PokemonEvolution(evolution.id, evolution.chain.species))
 
         if (evolution.chain.evolvesTo != null) {
-            val firstChain: MutableList<EvolutionChainFirst> = mutableListOf()
-            val secondChain: MutableList<EvolutionChainSecond> = mutableListOf()
-            evolution.chain.evolvesTo.forEach { first ->
 
-                val localID = evolution.id * 100 + evolution.chain.evolvesTo.indexOf(first).toLong()
+            //Existe um issue relatado em https://github.com/PokeAPI/pokeapi/issues/163 sobre a chain do wurmple não seguir a lógica
+            //padrão da API. Foi feito um pull request mas aparentemente continua a mesma coisa.
+            if (evolution.chain.species.nameGeneral == "wurmple") {
+
+                val firstChain: MutableList<EvolutionChainFirst> = mutableListOf()
+                val secondChain: MutableList<EvolutionChainSecond> = mutableListOf()
+                firstChain.add(
+                    EvolutionChainFirst(
+                        evolution.id,
+                        evolution.id * 100.toLong(),
+                        evolution.chain.evolvesTo[0].species
+                    )
+                )
+
+                secondChain.add(
+                    EvolutionChainSecond(
+                        evolution.id * 100.toLong(),
+                        evolution.chain.evolvesTo[0].evolvesTo?.get(0)?.species!!
+                        )
+                )
 
                 firstChain.add(
                     EvolutionChainFirst(
                         evolution.id,
-                        localID,
-                        first.species
+                        evolution.id * 100 + 1.toLong(),
+                        evolution.chain.evolvesTo[0].evolvesTo?.get(1)?.species!!
                     )
                 )
 
-                first.evolvesTo?.forEach { second ->
-                    secondChain.add(
-                        EvolutionChainSecond(
+                secondChain.add(
+                    EvolutionChainSecond(
+                        evolution.id * 100 + 1.toLong(),
+                        evolution.chain.evolvesTo[0].evolvesTo?.get(1)?.evolvesTo?.get(0)?.species!!
+                    )
+                )
+
+                dao.insertPokemonEvolutionsFirst(
+                    firstChain
+                )
+
+                dao.insertPokemonEvolutionsSecond(
+                    secondChain
+                )
+
+
+            } else {
+
+                val firstChain: MutableList<EvolutionChainFirst> = mutableListOf()
+                val secondChain: MutableList<EvolutionChainSecond> = mutableListOf()
+                evolution.chain.evolvesTo.forEach { first ->
+
+                    val localID =
+                        evolution.id * 100 + evolution.chain.evolvesTo.indexOf(first).toLong()
+
+                    firstChain.add(
+                        EvolutionChainFirst(
+                            evolution.id,
                             localID,
-                            second.species
+                            first.species
                         )
                     )
+
+                    first.evolvesTo?.forEach { second ->
+                        secondChain.add(
+                            EvolutionChainSecond(
+                                localID,
+                                second.species
+                            )
+                        )
+                    }
+
                 }
+
+                dao.insertPokemonEvolutionsFirst(
+                    firstChain
+                )
+
+                dao.insertPokemonEvolutionsSecond(
+                    secondChain
+                )
+
 
             }
 
-            dao.insertPokemonEvolutionsFirst(
-                firstChain
-            )
-
-            dao.insertPokemonEvolutionsSecond(
-                secondChain
-            )
 
         }
 

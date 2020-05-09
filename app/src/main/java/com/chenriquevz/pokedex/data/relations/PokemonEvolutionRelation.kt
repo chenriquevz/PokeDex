@@ -9,7 +9,7 @@ import com.chenriquevz.pokedex.model.PokemonEvolution
 class PokemonEvolutionRelation {
 
     @Embedded
-    var pokemonSecond: PokemonEvolution? = null
+    var pokemonBase: PokemonEvolution? = null
 
     @Relation(
         parentColumn = "id",
