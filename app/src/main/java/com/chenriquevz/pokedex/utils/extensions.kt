@@ -20,7 +20,7 @@ fun String.urlPokemonToID() =
 fun String.urlTypetoID() =
     this.removePrefix("https://pokeapi.co/api/v2/type/").removeSuffix("/").toInt()
 
-fun String.urlSpeciestoString() =
+fun String.urlSpeciestoInt() =
     this.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/").toInt()
 
 fun String.urlAbilitytoInt() =

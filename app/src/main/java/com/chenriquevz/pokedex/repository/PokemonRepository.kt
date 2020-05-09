@@ -3,6 +3,9 @@ package com.chenriquevz.pokedex.repository
 import android.util.Log
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.chenriquevz.pokedex.api.PokemonService
 import com.chenriquevz.pokedex.data.PokemonDao
 import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
@@ -13,7 +16,10 @@ import com.chenriquevz.pokedex.repository.GetResult.resultGeneralLiveData
 import com.chenriquevz.pokedex.repository.GetResult.resultGeneralVarieties
 import com.chenriquevz.pokedex.repository.GetResult.resultLiveData
 import com.chenriquevz.pokedex.repository.GetResult.speciesLiveData
+import com.chenriquevz.pokedex.ui.home.HomeBoundaryCallBack
 import com.chenriquevz.pokedex.utils.*
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
@@ -21,32 +27,28 @@ class PokemonRepository @Inject constructor(
     private val pokemonApi: PokemonService
 ) {
 
-    private var lastRequestedPage = 0
-
 
     fun getAbility(ability: Int) = dao.getPokemonAbilities(ability)
     fun getPokemon(id: Int) = dao.getGeneral(id)
     fun getEvolution(id: Int) = dao.getPokemonEvolutions(id)
     fun getSpecies(id: Int) = dao.getPokemonSpecies(id)
 
-    private fun searchByNumber() {
-        Log.d("homefrag", lastRequestedPage.toString())
-        lastRequestedPage = 20
-        Log.d("homefrag", lastRequestedPage.toString())
-    }
 
-    fun listByNumber() = resultLiveData(
-        networkCall = {
-            getResult {
-                pokemonApi.pokemonListByNumber(
-                    lastRequestedPage.toString(),
-                    20
-                )
-            }
-        },
-        saveCallResult = { dao.insertListByNumber(it.results.mapToDB()) },
-        databaseQuery = { dao.getListByNumber() }
-    )
+
+    fun listByNumber(coroutineScope: CoroutineScope): PokemonByNumberPaged {
+
+        val dataSourceFactory = dao.getListByNumberFactory()
+
+        val boundaryCallback = HomeBoundaryCallBack(pokemonApi, dao, coroutineScope)
+        val error = boundaryCallback.networkErrors
+
+        val data = LivePagedListBuilder(dataSourceFactory, 20)
+            .setBoundaryCallback(boundaryCallback)
+            .build()
+
+        return PokemonByNumberPaged(data, error)
+
+    }
 
 
     fun pokemonGeneral(id: String): LiveData<Result<PokemonGeneralRelation>> {
@@ -61,7 +63,12 @@ class PokemonRepository @Inject constructor(
             saveCallResult = { pokemonGeneralInsert(it) },
             databaseQuery = { databaseQuery },
             recursiveAbility = { abilityBulk(it.abilities.map { entry -> entry.ability.urlGeneral.urlAbilitytoInt() }) },
-            recursiveSpecies = { speciesBulk(id, it.species.urlGeneral.urlSpeciestoString().toString()) }
+            recursiveSpecies = {
+                speciesBulk(
+                    id,
+                    it.species.urlGeneral.urlSpeciestoInt().toString()
+                )
+            }
         )
     }
 
@@ -217,8 +224,6 @@ class PokemonRepository @Inject constructor(
 
 
     }
-
-
 
 
     private suspend fun abilityInsert(ability: PokemonAbility) {

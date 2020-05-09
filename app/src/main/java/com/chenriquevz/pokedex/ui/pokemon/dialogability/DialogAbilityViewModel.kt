@@ -1,9 +1,7 @@
 package com.chenriquevz.pokedex.ui.pokemon.dialogability
 
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.chenriquevz.pokedex.repository.PokemonRepository
-import com.chenriquevz.pokedex.utils.urlSpeciestoString
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 

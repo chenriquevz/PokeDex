@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.databinding.FragmentHomeBinding
 import com.chenriquevz.pokedex.di.Injectable
-import com.chenriquevz.pokedex.repository.Result
 import com.chenriquevz.pokedex.utils.toast
 import com.chenriquevz.pokedex.utils.toastLong
 import javax.inject.Inject
@@ -56,39 +54,27 @@ class HomeFragment : Fragment(), Injectable {
             LinearLayoutManager(_context)
         recyclerView?.layoutManager = layout
 
+        progressBar.visibility = View.VISIBLE
 
-        homeViewModel.listByNumber.observe(viewLifecycleOwner, Observer { result ->
+        homeViewModel.pokemonData.observe(viewLifecycleOwner, Observer { result ->
 
-            when (result.status) {
-                Result.Status.SUCCESS -> {
-                    progressBar.visibility = View.GONE
-                    homeListAdapter.submitList(result.data)
-                }
-                Result.Status.LOADING -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-                Result.Status.ERROR -> {
-                    progressBar.visibility = View.GONE
-                    _context.toastLong(result.message!!)
-                }
+            if (!result.isNullOrEmpty()) {
+                progressBar.visibility = View.GONE
+                homeListAdapter.submitList(result)
             }
         })
 
-        recyclerView?.addOnScrollListener(object :
-            androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                recyclerView: androidx.recyclerview.widget.RecyclerView,
-                dx: Int,
-                dy: Int
-            ) {
-                super.onScrolled(recyclerView, dx, dy)
-                val totalItemCount = layout.itemCount
-                val visibleItemCount = layout.childCount
-                val lastVisibleItem = layout.findLastVisibleItemPosition()
 
-                homeViewModel.listScrolled(visibleItemCount, lastVisibleItem, totalItemCount)
+        homeViewModel.networkErrors.observe(viewLifecycleOwner, Observer { error ->
+
+            if (error != null) {
+                progressBar.visibility = View.GONE
+                _context.toastLong(error)
             }
+
         })
+
+
 
     }
 

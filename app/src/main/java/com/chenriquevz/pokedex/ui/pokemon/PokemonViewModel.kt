@@ -3,14 +3,9 @@ package com.chenriquevz.pokedex.ui.pokemon
 import android.util.Log
 import androidx.lifecycle.*
 import com.chenriquevz.pokedex.repository.PokemonRepository
-import com.chenriquevz.pokedex.repository.Result
-import com.chenriquevz.pokedex.utils.urlAbilitytoInt
-import com.chenriquevz.pokedex.utils.urlSpeciestoString
+import com.chenriquevz.pokedex.utils.urlSpeciestoInt
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class PokemonViewModel @AssistedInject constructor(
     private val repository: PokemonRepository,
@@ -42,7 +37,7 @@ class PokemonViewModel @AssistedInject constructor(
 
     val species = Transformations.switchMap(pokemon) {
         Log.d("pokefrag", "viewmodel $it")
-        repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral!!.urlSpeciestoString())
+        repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral!!.urlSpeciestoInt())
     }
 
     val evolutionChain = Transformations.switchMap(species) {

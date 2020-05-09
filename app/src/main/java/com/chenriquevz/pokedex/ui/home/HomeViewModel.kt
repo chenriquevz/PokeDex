@@ -1,23 +1,22 @@
 package com.chenriquevz.pokedex.ui.home
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.PagedList
+import com.chenriquevz.pokedex.model.PokemonByNumber
+import com.chenriquevz.pokedex.model.PokemonByNumberPaged
 import com.chenriquevz.pokedex.repository.PokemonRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(private val repository: PokemonRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(val repository: PokemonRepository) : ViewModel() {
 
-    val listByNumber = repository.listByNumber()
+    private val pokemonList = repository.listByNumber(viewModelScope)
 
-    fun listScrolled(visibleItemCount: Int, lastVisibleItemPosition: Int, totalItemCount: Int) {
+    val pokemonData = pokemonList.data
 
-        if (visibleItemCount + lastVisibleItemPosition + 5 >= totalItemCount) {
-            //TODO - fix endless scroll
-            repository.listByNumber()
+    val networkErrors: LiveData<String> = pokemonList.networkErrors
 
-        }
-    }
 
 }
+

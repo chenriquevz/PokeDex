@@ -1,13 +1,15 @@
 package com.chenriquevz.pokedex.ui.home
 
 import android.view.ViewGroup
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.model.PokemonByNumber
 
-class HomeListAdapter : ListAdapter<PokemonByNumber, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
+class HomeListAdapter : PagedListAdapter<PokemonByNumber, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

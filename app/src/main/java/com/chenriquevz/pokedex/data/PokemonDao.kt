@@ -1,6 +1,7 @@
 package com.chenriquevz.pokedex.data
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 import com.chenriquevz.pokedex.data.relations.PokemonAbilityRelation
 import com.chenriquevz.pokedex.data.relations.PokemonEvolutionRelation
@@ -14,6 +15,10 @@ interface PokemonDao {
     @Transaction
     @Query("SELECT * FROM PokemonByNumber ORDER BY id ASC")
     fun getListByNumber(): LiveData<List<PokemonByNumber>>
+
+    @Transaction
+    @Query("SELECT * FROM PokemonByNumber ORDER BY id ASC")
+    fun getListByNumberFactory(): DataSource.Factory<Int, PokemonByNumber>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertListByNumber(pokemonList: List<PokemonByNumber>)
