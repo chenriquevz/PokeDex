@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.data.relations.PokemonFirstToSecondChain
 import com.chenriquevz.pokedex.databinding.ViewholderEvolutionBinding
-
 import com.chenriquevz.pokedex.ui.pokemon.PokemonFragmentDirections
 import com.chenriquevz.pokedex.ui.pokemon.evolution.second.SecondEvolutionListAdapter
 import com.chenriquevz.pokedex.utils.idToImageRequest
@@ -25,6 +24,7 @@ class EvolutionViewHolder(private val binding: ViewholderEvolutionBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
 
+    @SuppressLint("DefaultLocale")
     fun bind(result: PokemonFirstToSecondChain?) {
         val context = binding.root.context
         if (result != null) {

@@ -153,6 +153,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
         val entry: PokemonVarieties = parent.selectedItem as PokemonVarieties
 
+
         pokemonViewModel.updateSelectedSpecies(position)
 
         pokemonViewModel.pokemonVarieties(entry.pokemonVariety.urlGeneral.urlPokemonToID())
@@ -314,7 +315,6 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         }
 
     }
-
 
 
     private fun populateEvolution(evolutionChain: PokemonEvolutionRelation) {

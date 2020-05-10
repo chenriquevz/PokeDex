@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.databinding.FragmentHomeBinding
 import com.chenriquevz.pokedex.di.Injectable
-import com.chenriquevz.pokedex.utils.isLettersOrDigits
 import com.chenriquevz.pokedex.utils.toast
 import com.chenriquevz.pokedex.utils.toastLong
 import javax.inject.Inject
@@ -95,7 +94,7 @@ class HomeFragment : Fragment(), Injectable {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
 
-                if (query.isNotEmpty() && query.isLettersOrDigits()) {
+                if (query.isNotEmpty()) {
                     val action = HomeFragmentDirections.homeToPokemon(query)
                     navController.navigate(action)
                 } else {

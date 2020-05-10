@@ -57,6 +57,7 @@
                 app:nullable="false" />
         </action>
 
+
         <action
             android:id="@+id/pokemon_to_ability"
             app:destination="@+id/navigation_dialogability">
