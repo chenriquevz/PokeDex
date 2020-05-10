@@ -17,7 +17,7 @@ class TypeViewHolder(private val binding: ViewholderTypeBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
 
-    @SuppressLint("DefaultLocale")
+
     fun bind(result: Type?) {
         val context = binding.root.context
         if (result != null) {

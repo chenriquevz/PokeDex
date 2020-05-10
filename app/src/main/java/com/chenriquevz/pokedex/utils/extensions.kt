@@ -66,11 +66,6 @@ fun String.isLettersOrDigits(): Boolean {
         .length == this.length
 }
 
-fun String.isLettersOrDigits(): Boolean {
-    return this.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' }
-        .length == this.length
-}
-
 fun Context.toast(message: String) {
     Toast.makeText(
         this,

@@ -20,7 +20,7 @@ class SecondEvolutionViewHolder(private val binding: ViewholderSecondevolutionBi
     RecyclerView.ViewHolder(binding.root) {
 
 
-    @SuppressLint("DefaultLocale")
+
     fun bind(result: EvolutionChainSecond?) {
         val context = binding.root.context
         if (result != null) {

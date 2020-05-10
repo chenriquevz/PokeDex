@@ -43,7 +43,7 @@ data class PokemonVarieties(
     var localID: Int = 0
 
 
-    @SuppressLint("DefaultLocale")
+
     override fun toString(): String {
         return pokemonVariety.nameGeneral.replaceDashCapitalizeWords()
     }

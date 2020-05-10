@@ -24,7 +24,7 @@ class EvolutionViewHolder(private val binding: ViewholderEvolutionBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
 
-    @SuppressLint("DefaultLocale")
+
     fun bind(result: PokemonFirstToSecondChain?) {
         val context = binding.root.context
         if (result != null) {
