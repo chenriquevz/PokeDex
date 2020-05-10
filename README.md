@@ -1,5 +1,4 @@
 
-# ![git-comment]
 ## Desafio Mobile - Quem é esse pokémon!
 
 O objetivo desse projeto foi desenvolver uma Pokedex seguindo as orientações do desafio. Entre outros requisitos, o aplicativo funciona acessando informações da API pública disponível em pokeapi.co, além de listar os Pokémons em ordem númerica,
