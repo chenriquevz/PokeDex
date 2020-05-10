@@ -43,24 +43,26 @@ class EvolutionViewHolder(private val binding: ViewholderEvolutionBinding) :
                 .placeholder(R.drawable.ic_pokemonloading)
                 .into(binding.pokemonEvolutionSecond)
 
-            binding.pokemonEvolutionArrow.visibility = View.VISIBLE
-            val recyclerViewEvolution = binding.pokemonEvolutionRecycler
-            val layoutType =
-                GridLayoutManager(
-                    context,
-                    result.pokemonSecond.size,
-                    LinearLayoutManager.VERTICAL,
-                    false
-                )
-            val evolutionListAdapter = SecondEvolutionListAdapter()
-            recyclerViewEvolution.adapter = evolutionListAdapter
-            recyclerViewEvolution.layoutManager = layoutType
-
-            evolutionListAdapter.submitList(result.pokemonSecond)
-
-
             binding.pokemonEvolutionSecond.setOnClickListener {
                 Navigation.findNavController(it).navigate(PokemonFragmentDirections.navigationPokemon(result.pokemonFirst?.species?.urlGeneral!!.urlSpeciestoInt().toString()))
+            }
+
+            val evolutionSize = result.pokemonSecond.size
+            if (evolutionSize > 0) {
+                binding.pokemonEvolutionArrow.visibility = View.VISIBLE
+                val recyclerViewEvolution = binding.pokemonEvolutionRecycler
+                val layoutType =
+                    GridLayoutManager(
+                        context,
+                        evolutionSize,
+                        LinearLayoutManager.VERTICAL,
+                        false
+                    )
+                val evolutionListAdapter = SecondEvolutionListAdapter()
+                recyclerViewEvolution.adapter = evolutionListAdapter
+                recyclerViewEvolution.layoutManager = layoutType
+
+                evolutionListAdapter.submitList(result.pokemonSecond)
             }
 
 

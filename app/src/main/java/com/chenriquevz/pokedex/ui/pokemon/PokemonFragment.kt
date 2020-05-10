@@ -319,7 +319,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
     private fun populateEvolution(evolutionChain: PokemonEvolutionRelation) {
 
-        _binding?.pokemonEvolutionFirstName?.text = evolutionChain.pokemonBase?.species?.nameGeneral
+        _binding?.pokemonEvolutionFirstName?.text = evolutionChain.pokemonBase?.species?.nameGeneral?.capitalize()
 
         Glide.with(_context)
             .load(evolutionChain.pokemonBase?.species?.urlGeneral?.urlSpeciestoInt()?.urlPrimaryConverter())

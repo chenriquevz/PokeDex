@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
@@ -41,8 +42,12 @@ class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
 
             binding.homeCard.setOnClickListener {
 
+                val extras = FragmentNavigatorExtras(
+                    binding.homePokemonImage to "pokemonImage",
+                    binding.homePokemonName to "pokemonName")
+
                 Navigation.findNavController(it)
-                    .navigate(HomeFragmentDirections.homeToPokemon(result.id.toString()))
+                    .navigate(HomeFragmentDirections.homeToPokemon(result.id.toString()), extras)
 
             }
         }

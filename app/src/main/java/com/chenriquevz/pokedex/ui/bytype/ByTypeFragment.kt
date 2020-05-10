@@ -2,6 +2,7 @@ package com.chenriquevz.pokedex.ui.bytype
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,11 +56,14 @@ class ByTypeFragment : Fragment(), Injectable {
 
         typeViewModel.listByType.observe(viewLifecycleOwner, Observer { result ->
 
-
             when (result.status) {
                 Result.Status.SUCCESS -> {
-                    progressBar.visibility = View.GONE
-                    typeListAdapter.submitList(result.data)
+                    if (!result.data.isNullOrEmpty()) {
+
+                        progressBar.visibility = View.GONE
+                        typeListAdapter.submitList(result.data)
+                    }
+
                 }
                 Result.Status.LOADING -> {
                     progressBar.visibility = View.VISIBLE

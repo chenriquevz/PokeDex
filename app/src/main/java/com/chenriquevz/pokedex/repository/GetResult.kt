@@ -47,7 +47,7 @@ object GetResult {
         if (responseStatus.status == Result.Status.SUCCESS) {
             saveCallResult(responseStatus.data!!)
             completedCall(responseStatus.message)
-        } else if (responseStatus.status == Result.Status.ERROR && responseStatus.data != null) {
+        } else if (responseStatus.status == Result.Status.ERROR) {
             completedCall(responseStatus.message!!)
         }
     }
