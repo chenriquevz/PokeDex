@@ -172,7 +172,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     private fun populateBasic(data: PokemonGeneralRelation) {
 
         _binding?.pokemonPokemonName?.text =
-            data.pokemonGeneral?.name?.replaceDash()?.capitalize()
+            data.pokemonGeneral?.name?.replaceDashCapitalizeWords()
         _binding?.pokemonPokemonID?.text = getString(
             R.string.pokemonid_display,
             data.pokemonGeneral?.id.toString()
@@ -181,32 +181,32 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         if (data.stats.isNotEmpty()) {
             _binding?.pokemonPokemonSpeed?.text = getString(
                 R.string.pokemon_stat,
-                data.stats[0].stat.nameGeneral.replaceDash().capitalize(),
+                data.stats[0].stat.nameGeneral.replaceDashCapitalizeWords(),
                 data.stats[0].baseStat
             )
             _binding?.pokemonPokemonSpecialDefense?.text = getString(
                 R.string.pokemon_stat,
-                data.stats[1].stat.nameGeneral.replaceDash().capitalize(),
+                data.stats[1].stat.nameGeneral.replaceDashCapitalizeWords(),
                 data.stats[1].baseStat
             )
             _binding?.pokemonPokemonSpecialAttack?.text = getString(
                 R.string.pokemon_stat,
-                data.stats[2].stat.nameGeneral.replaceDash().capitalize(),
+                data.stats[2].stat.nameGeneral.replaceDashCapitalizeWords(),
                 data.stats[2].baseStat
             )
             _binding?.pokemonPokemonDefense?.text = getString(
                 R.string.pokemon_stat,
-                data.stats[3].stat.nameGeneral.replaceDash().capitalize(),
+                data.stats[3].stat.nameGeneral.replaceDashCapitalizeWords(),
                 data.stats[3].baseStat
             )
             _binding?.pokemonPokemonAttack?.text = getString(
                 R.string.pokemon_stat,
-                data.stats[4].stat.nameGeneral.replaceDash().capitalize(),
+                data.stats[4].stat.nameGeneral.replaceDashCapitalizeWords(),
                 data.stats[4].baseStat
             )
             _binding?.pokemonPokemonHP?.text = getString(
                 R.string.pokemon_stat,
-                data.stats[5].stat.nameGeneral.replaceDash().capitalize(),
+                data.stats[5].stat.nameGeneral.replaceDashCapitalizeWords(),
                 data.stats[5].baseStat
             )
 
@@ -231,7 +231,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     ) {
 
 
-        var primaryImage = data.pokemonGeneral?.id?.urlPrimaryConverter()
+        var primaryImage = data.pokemonGeneral?.id?.idToImageRequest()
         if (species != null) {
             val pokemonIndexVariety =
                 species.pokemonVarieties.single { it.pokemonVariety.nameGeneral == data.pokemonGeneral?.name }
@@ -243,7 +243,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
                     }
                     else -> {
-                        data.pokemonGeneral?.id?.urlPrimaryConverter()
+                        data.pokemonGeneral?.id?.idToImageRequest()
                     }
                 }
         }
@@ -322,7 +322,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         _binding?.pokemonEvolutionFirstName?.text = evolutionChain.pokemonBase?.species?.nameGeneral?.capitalize()
 
         Glide.with(_context)
-            .load(evolutionChain.pokemonBase?.species?.urlGeneral?.urlSpeciestoInt()?.urlPrimaryConverter())
+            .load(evolutionChain.pokemonBase?.species?.urlGeneral?.urlSpeciestoInt()?.idToImageRequest())
             .fitCenter()
             .placeholder(R.drawable.ic_pokemonloading)
             .into(_binding!!.pokemonEvolutionFirst)
@@ -331,7 +331,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         _binding?.pokemonEvolutionFirst?.setOnClickListener {
             Navigation.findNavController(it).navigate(
                 PokemonFragmentDirections.navigationPokemon(
-                    evolutionChain.pokemonBase?.species?.urlGeneral!!.urlSpeciestoInt().toString()
+                    evolutionChain.pokemonBase?.species?.urlGeneral!!.urlSpeciestoString()
                 )
             )
         }

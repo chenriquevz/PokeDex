@@ -33,6 +33,7 @@ class HomeFragment : Fragment(), Injectable {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         progressBar = _binding?.homeProgressbar!!

@@ -1,10 +1,8 @@
 package com.chenriquevz.pokedex.ui.pokemon
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.chenriquevz.pokedex.repository.PokemonRepository
 import com.chenriquevz.pokedex.utils.urlEvolutiontoInt
-import com.chenriquevz.pokedex.utils.urlEvolutiontoString
 import com.chenriquevz.pokedex.utils.urlSpeciestoInt
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -19,6 +17,16 @@ class PokemonViewModel @AssistedInject constructor(
         fun create(id: String): PokemonViewModel
     }
 
+    val pokemon = repository.pokemonDetail(id)
+    fun pokemonVarieties(variety: Int) = repository.getPokemon(variety)
+
+    val species = Transformations.switchMap(pokemon) {
+        repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral!!.urlSpeciestoInt())
+    }
+
+    val evolutionChain = Transformations.switchMap(species) {
+        repository.getEvolution(it.pokemonSpecies?.evolutionChain?.url!!.urlEvolutiontoInt())
+    }
 
     private val _selectedSpecies = MutableLiveData<Int>()
     val selectedSpecies: LiveData<Int> = _selectedSpecies
@@ -32,16 +40,5 @@ class PokemonViewModel @AssistedInject constructor(
 
     fun updatePageSelected(newSelection: Int) {
         _viewPagerSelected.postValue(newSelection)
-    }
-
-    val pokemon = repository.pokemonGeneral(id)
-    fun pokemonVarieties(variety: Int) = repository.getPokemon(variety)
-
-    val species = Transformations.switchMap(pokemon) {
-        repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral!!.urlSpeciestoInt())
-    }
-
-    val evolutionChain = Transformations.switchMap(species) {
-        repository.getEvolution(it.pokemonSpecies?.evolutionChain?.url!!.urlEvolutiontoInt())
     }
 }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
->
+    android:id="@+id/pokemon_scroll">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,10 +34,9 @@
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/pokemon_pokemonImage"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_margin="20dp"
-                android:transitionName="pokemonImage"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -58,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Pikachu"
-                android:transitionName="pokemonName"
+                style="@style/TitleText"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/pokemon_pokemonID"
                 app:layout_constraintTop_toBottomOf="@id/pokemon_spinner" />
@@ -69,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="#22"
+                style="@style/TitleText"
                 app:layout_constraintLeft_toRightOf="@id/pokemon_pokemonName"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pokemon_spinner" />
@@ -88,9 +88,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:text="Stats"
-                android:textSize="20sp"
+                style="@style/TitleText"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pokemon_pokemonTypes" />
 
@@ -161,9 +161,8 @@
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="20dp"
                 android:text="Abilities"
-                android:textSize="20sp"
+                style="@style/TitleText"
                 app:layout_constraintLeft_toLeftOf="parent"
-
                 app:layout_constraintTop_toBottomOf="@id/pokemon_pokemonSpecialAttack" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -184,7 +183,7 @@
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="20dp"
                 android:text="Evolution"
-                android:textSize="20sp"
+                style="@style/TitleText"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pokemon_Abilities" />
 
@@ -195,6 +194,7 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                android:background="?selectableItemBackgroundBorderless"
                 app:layout_constraintTop_toBottomOf="@id/pokemon_pokemonEvolutionTitle" />
 
             <TextView

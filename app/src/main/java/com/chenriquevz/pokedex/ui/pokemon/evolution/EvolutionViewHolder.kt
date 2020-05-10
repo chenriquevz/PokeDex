@@ -14,15 +14,11 @@ import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.data.relations.PokemonFirstToSecondChain
 import com.chenriquevz.pokedex.databinding.ViewholderEvolutionBinding
 
-import com.chenriquevz.pokedex.databinding.ViewholderTypeBinding
-import com.chenriquevz.pokedex.model.EvolutionChainFirst
-import com.chenriquevz.pokedex.model.Type
 import com.chenriquevz.pokedex.ui.pokemon.PokemonFragmentDirections
 import com.chenriquevz.pokedex.ui.pokemon.evolution.second.SecondEvolutionListAdapter
-import com.chenriquevz.pokedex.utils.urlPokemonToID
-import com.chenriquevz.pokedex.utils.urlPrimaryConverter
+import com.chenriquevz.pokedex.utils.idToImageRequest
 import com.chenriquevz.pokedex.utils.urlSpeciestoInt
-import com.chenriquevz.pokedex.utils.urlTypetoID
+import com.chenriquevz.pokedex.utils.urlSpeciestoString
 
 class EvolutionViewHolder(private val binding: ViewholderEvolutionBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -37,14 +33,14 @@ class EvolutionViewHolder(private val binding: ViewholderEvolutionBinding) :
             Glide.with(context)
                 .load(
                     result.pokemonFirst?.species?.urlGeneral?.urlSpeciestoInt()
-                        ?.urlPrimaryConverter()
+                        ?.idToImageRequest()
                 )
                 .fitCenter()
                 .placeholder(R.drawable.ic_pokemonloading)
                 .into(binding.pokemonEvolutionSecond)
 
             binding.pokemonEvolutionSecond.setOnClickListener {
-                Navigation.findNavController(it).navigate(PokemonFragmentDirections.navigationPokemon(result.pokemonFirst?.species?.urlGeneral!!.urlSpeciestoInt().toString()))
+                Navigation.findNavController(it).navigate(PokemonFragmentDirections.navigationPokemon(result.pokemonFirst?.species?.urlGeneral!!.urlSpeciestoString()))
             }
 
             val evolutionSize = result.pokemonSecond.size

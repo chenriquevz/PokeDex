@@ -92,4 +92,7 @@ dependencies {
 
     //paging library
     implementation "androidx.paging:paging-runtime:2.1.2"
+
+    //Material
+    implementation 'com.google.android.material:material:1.1.0'
 }

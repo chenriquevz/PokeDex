@@ -10,11 +10,9 @@ import com.bumptech.glide.Glide
 
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.databinding.ViewholderHomelistadapterBinding
-import com.chenriquevz.pokedex.model.PokemonByNumber
 import com.chenriquevz.pokedex.model.PokemonByType
-import com.chenriquevz.pokedex.ui.home.HomeFragmentDirections
-import com.chenriquevz.pokedex.utils.replaceDash
-import com.chenriquevz.pokedex.utils.urlPrimaryConverter
+import com.chenriquevz.pokedex.utils.replaceDashCapitalizeWords
+import com.chenriquevz.pokedex.utils.idToImageRequest
 import com.chenriquevz.pokedex.utils.urlSpritesConverter
 
 class ByTypeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
@@ -26,11 +24,11 @@ class ByTypeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
         if (result != null) {
             binding.homePokemonID.text =
                 context.getString(R.string.pokemonid_display, result.id.toString())
-            binding.homePokemonName.text = result.name.replaceDash().capitalize()
+            binding.homePokemonName.text = result.name.replaceDashCapitalizeWords()
 
 
             Glide.with(context)
-                .load(result.id.urlPrimaryConverter())
+                .load(result.id.idToImageRequest())
                 .fitCenter()
                 .placeholder(R.drawable.ic_pokemonloading)
                 .error(

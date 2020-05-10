@@ -26,7 +26,7 @@ class TypeListAdapter : ListAdapter<Type, RecyclerView.ViewHolder>(REPO_COMPARAT
         }
     }
 
-    override fun getItemViewType(position: Int) = R.layout.viewholder_homelistadapter
+    override fun getItemViewType(position: Int) = R.layout.viewholder_type
 
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<Type>() {

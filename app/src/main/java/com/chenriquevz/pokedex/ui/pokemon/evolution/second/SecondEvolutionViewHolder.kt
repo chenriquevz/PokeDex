@@ -9,18 +9,12 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.chenriquevz.pokedex.R
-import com.chenriquevz.pokedex.data.relations.PokemonFirstToSecondChain
-import com.chenriquevz.pokedex.databinding.ViewholderEvolutionBinding
 import com.chenriquevz.pokedex.databinding.ViewholderSecondevolutionBinding
 
-import com.chenriquevz.pokedex.databinding.ViewholderTypeBinding
-import com.chenriquevz.pokedex.model.EvolutionChainFirst
 import com.chenriquevz.pokedex.model.EvolutionChainSecond
-import com.chenriquevz.pokedex.model.Type
 import com.chenriquevz.pokedex.ui.pokemon.PokemonFragmentDirections
-import com.chenriquevz.pokedex.utils.urlPrimaryConverter
+import com.chenriquevz.pokedex.utils.idToImageRequest
 import com.chenriquevz.pokedex.utils.urlSpeciestoInt
-import com.chenriquevz.pokedex.utils.urlTypetoID
 
 class SecondEvolutionViewHolder(private val binding: ViewholderSecondevolutionBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -38,7 +32,7 @@ class SecondEvolutionViewHolder(private val binding: ViewholderSecondevolutionBi
             Glide.with(context)
                 .load(
                     result.species.urlGeneral.urlSpeciestoInt()
-                        .urlPrimaryConverter()
+                        .idToImageRequest()
                 )
                 .fitCenter()
                 .placeholder(R.drawable.ic_pokemonloading)

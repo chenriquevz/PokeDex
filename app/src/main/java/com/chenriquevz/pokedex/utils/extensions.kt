@@ -1,5 +1,6 @@
 package com.chenriquevz.pokedex.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import com.chenriquevz.pokedex.R
@@ -23,16 +24,19 @@ fun String.urlTypetoID() =
 fun String.urlSpeciestoInt() =
     this.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/").toInt()
 
+fun String.urlSpeciestoString() =
+    this.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/")
+
 fun String.urlAbilitytoInt() =
     this.removePrefix("https://pokeapi.co/api/v2/ability/").removeSuffix("/").toInt()
-
-fun String.urlEvolutiontoString() =
-    this.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/")
 
 fun String.urlEvolutiontoInt() =
     this.removePrefix("https://pokeapi.co/api/v2/evolution-chain/").removeSuffix("/").toInt()
 
-fun Int.urlPrimaryConverter(): String {
+fun Int.urlSpritesConverter(): String =
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$this.png"
+
+fun Int.idToImageRequest(): String {
 
     val numberToString = this.toString()
     val format = when (numberToString.length) {
@@ -54,11 +58,8 @@ fun Int.urlVarietyConverter(variety: Int): String {
     return "https://assets.pokemon.com/assets/cms2/img/pokedex/full/${format}_f$variety.png"
 }
 
-fun Int.urlSpritesConverter(): String =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$this.png"
-
-fun String.replaceDash () = this.replace("-", " ")
-fun Int.insertDash () = this.toString().replace(" ", "-")
+@SuppressLint("DefaultLocale")
+fun String.replaceDashCapitalizeWords () = replace("-", " ").split(" ").joinToString(" ") { it.capitalize() }
 
 fun Context.toast(message: String) {
     Toast.makeText(

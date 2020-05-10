@@ -25,22 +25,22 @@ interface PokemonService {
 
     @GET("type/{id}")
     suspend fun pokemonListByType(
-        @Path("id") type: String
+        @Path("id") type: Int
     ): Response<PaginationByType>
 
     @GET("pokemon-species/{id}")
     suspend fun pokemonSpecies(
-        @Path("id")species: String
+        @Path("id")species: Int
     ): Response<PokemonSpecies>
 
     @GET("ability/{id}")
     suspend fun pokemonAbility(
-        @Path("id")ability: String
+        @Path("id")ability: Int
     ): Response<PokemonAbility>
 
     @GET("evolution-chain/{id}")
     suspend fun pokemonEvolution(
-        @Path("id") evolutionChain: String
+        @Path("id") evolutionChain: Int
     ): Response<PaginationEvolution>
 
     companion object {
