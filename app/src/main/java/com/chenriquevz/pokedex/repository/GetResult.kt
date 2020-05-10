@@ -148,7 +148,6 @@ suspend fun <T> responseIntoResult(call: suspend () -> Response<T>): Result<T> {
 
 private fun <T> error(message: String): Result<T> {
     var newMessage = message
-    Log.d("error", message)
     when {
         message.contains("404") -> {
             newMessage = "Pokemon not found."

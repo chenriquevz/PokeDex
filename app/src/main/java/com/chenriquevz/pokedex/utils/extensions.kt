@@ -60,6 +60,11 @@ fun Int.urlVarietyConverter(variety: Int): String {
 @SuppressLint("DefaultLocale")
 fun String.replaceDashCapitalizeWords () = replace("-", " ").split(" ").joinToString(" ") { it.capitalize() }
 
+fun String.isLettersOrDigits(): Boolean {
+    return this.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' }
+        .length == this.length
+}
+
 fun Context.toast(message: String) {
     Toast.makeText(
         this,

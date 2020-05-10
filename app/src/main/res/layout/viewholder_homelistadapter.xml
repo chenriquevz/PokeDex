@@ -6,8 +6,6 @@
 
     <com.google.android.material.card.MaterialCardView
         app:rippleColor="@color/colorAccent"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/colorAccent"
         android:id="@+id/home_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

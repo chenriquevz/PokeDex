@@ -1,7 +1,7 @@
 package com.chenriquevz.pokedex.ui.pokemon.evolution.second
 
 
-import android.annotation.SuppressLint
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +14,7 @@ import com.chenriquevz.pokedex.databinding.ViewholderSecondevolutionBinding
 import com.chenriquevz.pokedex.model.EvolutionChainSecond
 import com.chenriquevz.pokedex.ui.pokemon.PokemonFragmentDirections
 import com.chenriquevz.pokedex.utils.idToImageRequest
+import com.chenriquevz.pokedex.utils.replaceDashCapitalizeWords
 import com.chenriquevz.pokedex.utils.urlSpeciestoInt
 
 class SecondEvolutionViewHolder(private val binding: ViewholderSecondevolutionBinding) :
@@ -28,7 +29,7 @@ class SecondEvolutionViewHolder(private val binding: ViewholderSecondevolutionBi
             binding.pokemonEvolutionThirdName.visibility = View.VISIBLE
             binding.pokemonEvolutionThird.visibility = View.VISIBLE
 
-            binding.pokemonEvolutionThirdName.text = result.species.nameGeneral.capitalize()
+            binding.pokemonEvolutionThirdName.text = result.species.nameGeneral.replaceDashCapitalizeWords()
             Glide.with(context)
                 .load(
                     result.species.urlGeneral.urlSpeciestoInt()

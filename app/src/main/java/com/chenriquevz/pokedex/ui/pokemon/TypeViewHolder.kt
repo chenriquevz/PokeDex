@@ -1,7 +1,6 @@
 package com.chenriquevz.pokedex.ui.pokemon
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.databinding.ViewholderTypeBinding
 import com.chenriquevz.pokedex.model.Type
+import com.chenriquevz.pokedex.utils.replaceDashCapitalizeWords
 import com.chenriquevz.pokedex.utils.urlTypetoID
 
 class TypeViewHolder(private val binding: ViewholderTypeBinding) :
@@ -20,7 +20,7 @@ class TypeViewHolder(private val binding: ViewholderTypeBinding) :
     fun bind(result: Type?) {
         val context = binding.root.context
         if (result != null) {
-            binding.pokemonType.text = result.type.nameGeneral.capitalize()
+            binding.pokemonType.text = result.type.nameGeneral.replaceDashCapitalizeWords()
 
             setColorByType(context, result.type.nameGeneral)
 
@@ -28,7 +28,7 @@ class TypeViewHolder(private val binding: ViewholderTypeBinding) :
                 Navigation.findNavController(it).navigate(
                     PokemonFragmentDirections.pokemonToType(
                         result.type.urlGeneral.urlTypetoID(),
-                        result.type.nameGeneral.capitalize()
+                        result.type.nameGeneral.replaceDashCapitalizeWords()
                     )
                 )
             }

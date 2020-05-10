@@ -1,18 +1,16 @@
 package com.chenriquevz.pokedex.ui.bytype
 
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.databinding.ViewholderHomelistadapterBinding
 import com.chenriquevz.pokedex.model.PokemonByType
-import com.chenriquevz.pokedex.utils.replaceDashCapitalizeWords
 import com.chenriquevz.pokedex.utils.idToImageRequest
+import com.chenriquevz.pokedex.utils.replaceDashCapitalizeWords
 import com.chenriquevz.pokedex.utils.urlSpritesConverter
 
 class ByTypeViewHolder(private val binding: ViewholderHomelistadapterBinding) :

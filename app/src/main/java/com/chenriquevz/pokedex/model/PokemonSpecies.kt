@@ -1,6 +1,6 @@
 package com.chenriquevz.pokedex.model
 
-import android.annotation.SuppressLint
+
 import androidx.room.*
 import com.chenriquevz.pokedex.utils.replaceDashCapitalizeWords
 import com.google.gson.annotations.SerializedName
@@ -45,6 +45,5 @@ data class PokemonVarieties(
 
     override fun toString(): String {
         return pokemonVariety.nameGeneral.replaceDashCapitalizeWords()
-            .capitalize()
     }
 }

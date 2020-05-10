@@ -1,6 +1,6 @@
 package com.chenriquevz.pokedex.ui.pokemon
 
-import android.annotation.SuppressLint
+
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -152,7 +152,6 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
 
         val entry: PokemonVarieties = parent.selectedItem as PokemonVarieties
-        Log.d("pokefrag", "$entry")
 
         pokemonViewModel.updateSelectedSpecies(position)
 
@@ -317,9 +316,10 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     }
 
 
+
     private fun populateEvolution(evolutionChain: PokemonEvolutionRelation) {
 
-        _binding?.pokemonEvolutionFirstName?.text = evolutionChain.pokemonBase?.species?.nameGeneral?.capitalize()
+        _binding?.pokemonEvolutionFirstName?.text = evolutionChain.pokemonBase?.species?.nameGeneral?.replaceDashCapitalizeWords()
 
         Glide.with(_context)
             .load(evolutionChain.pokemonBase?.species?.urlGeneral?.urlSpeciestoInt()?.idToImageRequest())
