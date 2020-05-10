@@ -31,7 +31,7 @@ import com.chenriquevz.pokedex.ui.pokemon.carrossel.CarrosselAdapter
 import com.chenriquevz.pokedex.ui.pokemon.evolution.EvolutionListAdapter
 import com.chenriquevz.pokedex.utils.*
 
-@SuppressLint("DefaultLocale")
+
 class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectable {
 
     private val pokemonViewModel by viewModel(this) {
@@ -66,7 +66,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         return rootView
     }
 
-    @SuppressLint("DefaultLocale")
+
     private fun setData() {
 
         val recyclerViewType = _binding?.pokemonPokemonTypes
@@ -148,7 +148,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
     }
 
-    @SuppressLint("DefaultLocale")
+
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
 
         val entry: PokemonVarieties = parent.selectedItem as PokemonVarieties

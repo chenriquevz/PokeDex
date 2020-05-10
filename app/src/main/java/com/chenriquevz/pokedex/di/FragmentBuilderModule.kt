@@ -1,6 +1,5 @@
 package com.chenriquevz.pokedex.di
 
-import androidx.fragment.app.DialogFragment
 import com.chenriquevz.pokedex.ui.bytype.ByTypeFragment
 import com.chenriquevz.pokedex.ui.home.HomeFragment
 import com.chenriquevz.pokedex.ui.pokemon.PokemonFragment

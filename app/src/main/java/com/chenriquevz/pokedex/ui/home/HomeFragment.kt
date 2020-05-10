@@ -2,7 +2,6 @@ package com.chenriquevz.pokedex.ui.home
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView

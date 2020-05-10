@@ -1,7 +1,6 @@
 package com.chenriquevz.pokedex.model
 
 import androidx.room.Entity
-import com.google.gson.annotations.SerializedName
 
 @Entity(primaryKeys = ["id"])
 data class PokemonByType(

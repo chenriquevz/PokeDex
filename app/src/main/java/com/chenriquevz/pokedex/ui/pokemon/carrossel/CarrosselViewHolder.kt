@@ -10,7 +10,7 @@ import com.chenriquevz.pokedex.databinding.ViewholderCarrosselBinding
 
 class CarrosselViewHolder(private val binding: ViewholderCarrosselBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    @SuppressLint("DefaultLocale")
+
     fun bind(url: String) {
 
         Glide.with(binding.root.context)

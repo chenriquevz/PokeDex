@@ -18,7 +18,7 @@ import com.chenriquevz.pokedex.utils.urlSpritesConverter
 class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    @SuppressLint("DefaultLocale")
+
     fun bind(result: PokemonByNumber?) {
         val context = binding.root.context
         if (result != null) {

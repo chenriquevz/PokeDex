@@ -5,9 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chenriquevz.pokedex.R
-import com.chenriquevz.pokedex.data.relations.PokemonFirstToSecondChain
-import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
-import com.chenriquevz.pokedex.model.*
+import com.chenriquevz.pokedex.model.EvolutionChainSecond
 
 class SecondEvolutionListAdapter : ListAdapter<EvolutionChainSecond, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
 

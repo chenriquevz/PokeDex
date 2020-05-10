@@ -3,6 +3,7 @@
     <color name="colorPrimary">#EE0213</color>
     <color name="colorPrimaryDark">#C20000</color>
     <color name="colorAccent">#E8F910</color>
+    <color name="ic_pokeball_background">#FFFFFF</color>
 
     <color name="typeNormal">#A8A878</color>
     <color name="typeFire">#F08030</color>

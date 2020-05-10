@@ -3,7 +3,6 @@ package com.chenriquevz.pokedex.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.chenriquevz.pokedex.ui.home.HomeViewModel
-import com.chenriquevz.pokedex.ui.pokemon.PokemonViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

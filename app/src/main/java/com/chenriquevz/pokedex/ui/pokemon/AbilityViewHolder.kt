@@ -1,20 +1,19 @@
 package com.chenriquevz.pokedex.ui.pokemon
 
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-
 import com.chenriquevz.pokedex.databinding.ViewholderAbilityBinding
 import com.chenriquevz.pokedex.model.AbilitiesList
-import com.chenriquevz.pokedex.utils.*
+import com.chenriquevz.pokedex.utils.replaceDashCapitalizeWords
+import com.chenriquevz.pokedex.utils.urlAbilitytoInt
 
 class AbilityViewHolder(private val binding: ViewholderAbilityBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    @SuppressLint("DefaultLocale")
+
     fun bind(result: AbilitiesList?) {
 
         if (result != null) {

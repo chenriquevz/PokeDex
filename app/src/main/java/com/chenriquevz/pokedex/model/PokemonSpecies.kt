@@ -42,7 +42,7 @@ data class PokemonVarieties(
     @ColumnInfo(name = "localID")
     var localID: Int = 0
 
-    @SuppressLint("DefaultLocale")
+
     override fun toString(): String {
         return pokemonVariety.nameGeneral.replaceDashCapitalizeWords()
             .capitalize()

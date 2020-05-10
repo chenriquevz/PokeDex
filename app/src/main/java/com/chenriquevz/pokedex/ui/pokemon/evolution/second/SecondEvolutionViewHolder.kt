@@ -19,7 +19,7 @@ import com.chenriquevz.pokedex.utils.urlSpeciestoInt
 class SecondEvolutionViewHolder(private val binding: ViewholderSecondevolutionBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    @SuppressLint("DefaultLocale")
+
     fun bind(result: EvolutionChainSecond?) {
         val context = binding.root.context
         if (result != null) {

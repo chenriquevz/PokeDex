@@ -5,9 +5,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chenriquevz.pokedex.R
-import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
-import com.chenriquevz.pokedex.model.PokemonByNumber
-import com.chenriquevz.pokedex.model.PokemonByType
 import com.chenriquevz.pokedex.model.Type
 
 class TypeListAdapter : ListAdapter<Type, RecyclerView.ViewHolder>(REPO_COMPARATOR) {

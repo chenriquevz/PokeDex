@@ -3,7 +3,6 @@ package com.chenriquevz.pokedex.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
-import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.model.GeneralEntry
 import com.chenriquevz.pokedex.model.PokemonByNumber
 

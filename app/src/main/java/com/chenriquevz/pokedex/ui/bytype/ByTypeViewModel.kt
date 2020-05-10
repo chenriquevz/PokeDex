@@ -6,7 +6,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 
 class ByTypeViewModel @AssistedInject constructor(
-    private val repository: PokemonRepository,
+    repository: PokemonRepository,
     @Assisted private val type: Int
 ) : ViewModel() {
 

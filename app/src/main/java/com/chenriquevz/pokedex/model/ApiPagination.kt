@@ -2,10 +2,8 @@ package com.chenriquevz.pokedex.model
 
 import com.google.gson.annotations.SerializedName
 
-class PaginationByNumber (
-    @SerializedName("count") val count: Int,
+class PaginationByNumber(
     @SerializedName("next") val next: String?,
-    @SerializedName("previous") val previous: String?,
     @SerializedName("results") val results: List<GeneralEntry>
 )
 

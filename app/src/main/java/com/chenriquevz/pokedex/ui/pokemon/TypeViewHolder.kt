@@ -3,18 +3,12 @@ package com.chenriquevz.pokedex.ui.pokemon
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.ShapeDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.chenriquevz.pokedex.R
-
 import com.chenriquevz.pokedex.databinding.ViewholderTypeBinding
 import com.chenriquevz.pokedex.model.Type
 import com.chenriquevz.pokedex.utils.urlTypetoID
@@ -22,7 +16,7 @@ import com.chenriquevz.pokedex.utils.urlTypetoID
 class TypeViewHolder(private val binding: ViewholderTypeBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    @SuppressLint("DefaultLocale")
+
     fun bind(result: Type?) {
         val context = binding.root.context
         if (result != null) {
