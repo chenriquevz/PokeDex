@@ -4,6 +4,7 @@ package com.chenriquevz.pokedex.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
@@ -12,6 +13,7 @@ import com.chenriquevz.pokedex.databinding.ViewholderHomelistadapterBinding
 import com.chenriquevz.pokedex.model.PokemonByNumber
 import com.chenriquevz.pokedex.utils.replaceDashCapitalizeWords
 import com.chenriquevz.pokedex.utils.idToImageRequest
+import com.chenriquevz.pokedex.utils.toTransitionGroup
 import com.chenriquevz.pokedex.utils.urlSpritesConverter
 
 class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
@@ -22,7 +24,7 @@ class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
         val context = binding.root.context
         if (result != null) {
             binding.homePokemonID.text =
-                context.getString(R.string.pokemonid_display, result.id.toString())
+                context.getString(R.string.pokemonid_display, result.id)
             binding.homePokemonName.text = result.name.replaceDashCapitalizeWords()
 
 
@@ -38,11 +40,24 @@ class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
                 )
                 .into(binding.homePokemonImage)
 
+            binding.homePokemonImage.transitionName =
+                context.getString(R.string.homePokemon_transition_image, result.id)
+            binding.homePokemonName.transitionName =
+                context.getString(R.string.homePokemon_transition_name, result.id)
+            binding.homePokemonID.transitionName =
+                context.getString(R.string.homePokemon_transition_id, result.id)
+
+
             binding.homeCard.setOnClickListener {
 
 
+                val extras = FragmentNavigatorExtras(
+                    binding.homePokemonImage.toTransitionGroup(),
+                    binding.homePokemonName.toTransitionGroup(),
+                    binding.homePokemonID.toTransitionGroup()
+                )
                 Navigation.findNavController(it)
-                    .navigate(HomeFragmentDirections.homeToPokemon(result.id.toString()))
+                    .navigate(HomeFragmentDirections.homeToPokemon(result.id.toString()), extras)
 
             }
         }

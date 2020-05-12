@@ -83,6 +83,7 @@ object GetResult {
 
             val responseStatus = networkCall.invoke()
             if (responseStatus.status == Result.Status.SUCCESS) {
+
                 saveCallResult(responseStatus.data!!)
                 recursiveAbility(responseStatus.data)
                 recursiveSpecies(responseStatus.data)

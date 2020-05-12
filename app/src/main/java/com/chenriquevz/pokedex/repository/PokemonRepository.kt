@@ -1,5 +1,6 @@
 package com.chenriquevz.pokedex.repository
 
+import android.util.Log
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
@@ -34,6 +35,7 @@ class PokemonRepository @Inject constructor(
     fun listByNumber(coroutineScope: CoroutineScope): PokemonByNumberPaged {
 
         val dataSourceFactory = dao.getListByNumberFactory()
+
 
         val boundaryCallback = HomeBoundaryCallBack(pokemonApi, dao, coroutineScope)
         val error = boundaryCallback.networkErrors

@@ -2,7 +2,10 @@ package com.chenriquevz.pokedex.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.View
 import android.widget.Toast
+import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.Fragment
 import com.chenriquevz.pokedex.model.GeneralEntry
 import com.chenriquevz.pokedex.model.PokemonByNumber
 
@@ -81,5 +84,16 @@ fun Context.toastLong(message: String) {
         Toast.LENGTH_LONG
     ).show()
 
+}
+
+fun View.toTransitionGroup() = this to transitionName
+
+fun Fragment.waitForTransition(targetView: View) {
+    postponeEnterTransition()
+    targetView.doOnPreDraw { startPostponedEnterTransition() }
+}
+
+fun Fragment.readyForTransition(targetView: View) {
+    this.startPostponedEnterTransition()
 }
 

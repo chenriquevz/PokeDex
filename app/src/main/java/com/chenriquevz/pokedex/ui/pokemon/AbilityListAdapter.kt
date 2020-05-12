@@ -23,7 +23,7 @@ class AbilityListAdapter : ListAdapter<AbilitiesList, RecyclerView.ViewHolder>(R
         }
     }
 
-    override fun getItemViewType(position: Int) = R.layout.viewholder_ability
+   // override fun getItemViewType(position: Int) = R.layout.viewholder_ability
 
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<AbilitiesList>() {

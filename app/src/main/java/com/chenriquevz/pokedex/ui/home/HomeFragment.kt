@@ -16,6 +16,7 @@ import com.chenriquevz.pokedex.di.Injectable
 import com.chenriquevz.pokedex.utils.isLettersOrDigits
 import com.chenriquevz.pokedex.utils.toast
 import com.chenriquevz.pokedex.utils.toastLong
+import com.chenriquevz.pokedex.utils.waitForTransition
 import javax.inject.Inject
 
 class HomeFragment : Fragment(), Injectable {
@@ -37,7 +38,7 @@ class HomeFragment : Fragment(), Injectable {
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         progressBar = _binding?.homeProgressbar!!
-
+        waitForTransition(_binding?.homeRecyclerview!!)
         val rootView = _binding?.root
         _context = rootView!!.context
 
@@ -45,6 +46,11 @@ class HomeFragment : Fragment(), Injectable {
         setRecyclerView()
 
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun setRecyclerView() {
@@ -62,6 +68,8 @@ class HomeFragment : Fragment(), Injectable {
             if (!result.isNullOrEmpty()) {
                 progressBar.visibility = View.GONE
                 homeListAdapter.submitList(result)
+
+
             }
         })
 
@@ -74,7 +82,6 @@ class HomeFragment : Fragment(), Injectable {
             }
 
         })
-
 
 
     }
