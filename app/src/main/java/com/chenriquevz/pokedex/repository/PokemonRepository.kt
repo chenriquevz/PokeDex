@@ -28,8 +28,8 @@ class PokemonRepository @Inject constructor(
 
     fun getAbility(ability: Int) = dao.getPokemonAbilities(ability)
     fun getPokemon(id: Int) = dao.getGeneral(id)
-    fun getEvolution(id: Int) = dao.getPokemonEvolutions(id)
-    fun getSpecies(id: Int) = dao.getPokemonSpecies(id)
+    fun getEvolution(id: Int?) = dao.getPokemonEvolutions(id)
+    fun getSpecies(id: Int?) = dao.getPokemonSpecies(id)
 
 
     fun listByNumber(coroutineScope: CoroutineScope): PokemonByNumberPaged {
@@ -72,7 +72,7 @@ class PokemonRepository @Inject constructor(
     )
 
 
-    fun pokemonDetail(id: String): LiveData<Result<PokemonGeneralRelation>> {
+    fun pokemonDetail(id: String): LiveData<Result<PokemonGeneralRelation?>> {
 
         var databaseQuery = dao.getGeneral(id)
         if (id.isDigitsOnly()) {
@@ -114,7 +114,7 @@ class PokemonRepository @Inject constructor(
 
 
 
-    private suspend fun speciesLoad(pokemonID: String, speciesID: Int) = speciesCallSave(
+    private suspend fun speciesLoad(pokemonID: String, speciesID: Int?) = speciesCallSave(
         networkCall = { responseIntoResult { pokemonApi.pokemonSpecies(speciesID) } },
         saveCallResult = { pokemonSpeciesInsert(it) },
         recursiveEvolution = { pokemonEvolution(it.evolutionChain.url.urlEvolutiontoInt()) },

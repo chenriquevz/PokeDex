@@ -175,7 +175,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
                     populateSpecies(species)
                     Log.d(
                         "teste-first",
-                        "${species.pokemonVarieties.firstOrNull()}"
+                        "${species.pokemonVarieties?.firstOrNull()}"
                     )
 
                 }
@@ -281,16 +281,16 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     }
 
     private fun populateImages(
-        data: PokemonGeneralRelation,
+        data: PokemonGeneralRelation?,
         species: PokemonSpeciesRelation? = null
     ) {
 
 
-        var primaryImage = data.pokemonGeneral?.id?.idToImageRequest()
+        var primaryImage = data?.pokemonGeneral?.id?.idToImageRequest()
         if (species != null) {
             val pokemonIndexVariety =
-                species.pokemonVarieties.single { it.pokemonVariety.nameGeneral == data.pokemonGeneral?.name }
-            val index = species.pokemonVarieties.indexOf(pokemonIndexVariety)
+                species.pokemonVarieties?.single { it.pokemonVariety.nameGeneral == data?.pokemonGeneral?.name }
+            val index = species.pokemonVarieties?.indexOf(pokemonIndexVariety)!!
             primaryImage =
                 when {
                     index > 0 -> {
@@ -298,25 +298,25 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
                     }
                     else -> {
-                        data.pokemonGeneral?.id?.idToImageRequest()
+                        data?.pokemonGeneral?.id?.idToImageRequest()
                     }
                 }
         }
 
         val sprites = listOf(
             primaryImage,
-            data.pokemonGeneral?.sprites?.frontDefault,
-            data.pokemonGeneral?.sprites?.backDefault,
-            data.pokemonGeneral?.sprites?.frontShiny,
-            data.pokemonGeneral?.sprites?.backShiny,
-            data.pokemonGeneral?.sprites?.frontFemale,
-            data.pokemonGeneral?.sprites?.backFemale,
-            data.pokemonGeneral?.sprites?.frontShinyFemale,
-            data.pokemonGeneral?.sprites?.backShinyFemale
+            data?.pokemonGeneral?.sprites?.frontDefault,
+            data?.pokemonGeneral?.sprites?.backDefault,
+            data?.pokemonGeneral?.sprites?.frontShiny,
+            data?.pokemonGeneral?.sprites?.backShiny,
+            data?.pokemonGeneral?.sprites?.frontFemale,
+            data?.pokemonGeneral?.sprites?.backFemale,
+            data?.pokemonGeneral?.sprites?.frontShinyFemale,
+            data?.pokemonGeneral?.sprites?.backShinyFemale
         )
 
         val spritesNotNull = sprites.filterNotNull().map {
-            PokemonCarrossel(data.pokemonGeneral?.id!!, it)
+            PokemonCarrossel(data?.pokemonGeneral?.id!!, it)
         }
 
         Log.d("teste-imagem", "${spritesNotNull.first().pokemonID}  ${spritesNotNull.first().urlString}")
@@ -329,14 +329,14 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     ) {
 
 
-        if (species.pokemonVarieties.size > 1) {
+        if (species.pokemonVarieties!!.size > 1) {
 
             pokemonViewModel.firstPokemonName.observe(viewLifecycleOwner, Observer { ID ->
 
                 val pokemonSelected =
-                    species.pokemonVarieties.single { it.pokemonVariety.nameGeneral == ID }
+                    species.pokemonVarieties!!.single { it.pokemonVariety.nameGeneral == ID }
                 val varieties =
-                    species.pokemonVarieties.filterNot { it.pokemonVariety.nameGeneral == ID } as MutableList
+                    species.pokemonVarieties!!.filterNot { it.pokemonVariety.nameGeneral == ID } as MutableList
                 varieties.add(0, pokemonSelected)
 
                 val adapter = ArrayAdapter(

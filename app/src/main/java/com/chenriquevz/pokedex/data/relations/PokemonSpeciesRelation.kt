@@ -14,7 +14,7 @@ class PokemonSpeciesRelation {
         parentColumn = "id",
         entityColumn = "id"
     )
-    var pokemonVarieties: List<PokemonVarieties> = emptyList()
+    var pokemonVarieties: List<PokemonVarieties>? = emptyList()
 
 
 }

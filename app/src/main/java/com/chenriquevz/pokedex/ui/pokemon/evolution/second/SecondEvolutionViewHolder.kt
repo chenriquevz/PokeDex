@@ -32,8 +32,7 @@ class SecondEvolutionViewHolder(private val binding: ViewholderSecondevolutionBi
             binding.pokemonEvolutionThirdName.text = result.species.nameGeneral.replaceDashCapitalizeWords()
             Glide.with(context)
                 .load(
-                    result.species.urlGeneral.urlSpeciestoInt()
-                        .idToImageRequest()
+                    result.species.urlGeneral.urlSpeciestoInt()?.idToImageRequest()
                 )
                 .fitCenter()
                 .placeholder(R.drawable.ic_pokemonloading)

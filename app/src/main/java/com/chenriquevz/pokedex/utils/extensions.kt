@@ -23,8 +23,8 @@ fun String.urlPokemonToID() =
 fun String.urlTypetoID() =
     this.removePrefix("https://pokeapi.co/api/v2/type/").removeSuffix("/").toInt()
 
-fun String.urlSpeciestoInt() =
-    this.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/").toInt()
+fun String?.urlSpeciestoInt() =
+    this?.removePrefix("https://pokeapi.co/api/v2/pokemon-species/")?.removeSuffix("/")?.toInt()
 
 fun String.urlSpeciestoString() =
     this.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/")
@@ -38,7 +38,7 @@ fun String.urlEvolutiontoInt() =
 fun Int.urlSpritesConverter(): String =
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$this.png"
 
-fun Int.idToImageRequest(): String {
+fun Int?.idToImageRequest(): String {
 
     val numberToString = this.toString()
     val format = when (numberToString.length) {

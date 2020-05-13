@@ -20,16 +20,16 @@ class PokemonViewModel @AssistedInject constructor(
     val pokemon = repository.pokemonDetail(id)
     fun pokemonVarieties(variety: Int) = repository.getPokemon(variety)
 
-    private val _firstPokemonName = MutableLiveData<String>()
-    val firstPokemonName: LiveData<String> = _firstPokemonName
+    private val _firstPokemonName = MutableLiveData<String?>()
+    val firstPokemonName: LiveData<String?> = _firstPokemonName
 
     val species = Transformations.switchMap(pokemon) {
         _firstPokemonName.postValue(it.data?.pokemonGeneral?.name)
-        repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral!!.urlSpeciestoInt())
+        repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral?.urlSpeciestoInt())
     }
 
     val evolutionChain = Transformations.switchMap(species) {
-        repository.getEvolution(it.pokemonSpecies?.evolutionChain?.url!!.urlEvolutiontoInt())
+        repository.getEvolution(it?.pokemonSpecies?.evolutionChain?.url?.urlEvolutiontoInt())
     }
 
     private val _selectedSpecies = MutableLiveData<Int>()
