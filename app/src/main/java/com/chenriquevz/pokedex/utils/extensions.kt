@@ -49,6 +49,8 @@ fun Int.idToImageRequest(): String {
     return "https://assets.pokemon.com/assets/cms2/img/pokedex/full/$format.png"
 }
 
+fun String.imageRequestToId(): Int = removePrefix("https://assets.pokemon.com/assets/cms2/img/pokedex/full/").substringAfterLast("/").replaceAfterLast("_", "").replace("_", "").toInt()
+
 fun Int.urlVarietyConverter(variety: Int): String {
 
     val numberToString = this.toString()

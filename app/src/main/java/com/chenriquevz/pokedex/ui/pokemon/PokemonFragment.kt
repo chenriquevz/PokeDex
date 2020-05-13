@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatSpinner
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
@@ -28,6 +29,8 @@ import com.chenriquevz.pokedex.di.viewModel
 import com.chenriquevz.pokedex.model.PokemonVarieties
 import com.chenriquevz.pokedex.api.Result
 import com.chenriquevz.pokedex.data.relations.PokemonEvolutionRelation
+import com.chenriquevz.pokedex.model.GeneralEntry
+import com.chenriquevz.pokedex.model.PokemonCarrossel
 import com.chenriquevz.pokedex.ui.pokemon.carrossel.CarrosselAdapter
 import com.chenriquevz.pokedex.ui.pokemon.evolution.EvolutionListAdapter
 import com.chenriquevz.pokedex.utils.*
@@ -52,7 +55,9 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         super.onCreate(savedInstanceState)
 
         sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+                // TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+            TransitionInflater.from(context)
+                .inflateTransition(R.transition.image_shared_element_transition)
 
     }
 
@@ -64,7 +69,6 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         _binding = FragmentPokemonBinding.inflate(inflater, container, false)
         postponeEnterTransition()
 
-        postponeEnterTransition()
         val rootView = _binding?.root
         _context = rootView!!.context
 
@@ -79,9 +83,16 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding?.pokemonPokemonImage?.transitionName = _context.getString(R.string.homePokemon_transition_image, args.pokemonID.toInt())
-        _binding?.pokemonPokemonName?.transitionName = _context.getString(R.string.homePokemon_transition_name, args.pokemonID.toInt())
-        _binding?.pokemonPokemonID?.transitionName = _context.getString(R.string.homePokemon_transition_id, args.pokemonID.toInt())
+
+        if (args.pokemonID.isDigitsOnly()) {
+            _binding?.pokemonPokemonImage?.transitionName =
+                _context.getString(R.string.homePokemon_transition_image, args.pokemonID.toInt())
+            _binding?.pokemonPokemonName?.transitionName =
+                _context.getString(R.string.homePokemon_transition_name, args.pokemonID.toInt())
+            _binding?.pokemonPokemonID?.transitionName =
+                _context.getString(R.string.homePokemon_transition_id, args.pokemonID.toInt())
+        }
+
 
     }
 
@@ -156,6 +167,8 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
                 }
                 Result.Status.ERROR -> {
                     progressBar.visibility = View.GONE
+                    _binding?.pokemonConstraint?.visibility = View.INVISIBLE
+                    startPostponedEnterTransition()
                     _context.toastLong(result.message!!)
                 }
             }
@@ -281,7 +294,9 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
             data.pokemonGeneral?.sprites?.backShinyFemale
         )
 
-        val spritesNotNull = sprites.filterNotNull()
+        val spritesNotNull = sprites.mapNotNull { it ->
+            PokemonCarrossel(data.pokemonGeneral?.id!!, it)
+        }
 
         val pagerAdapter = CarrosselAdapter(spritesNotNull) { imageReady() }
 
@@ -384,6 +399,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     }
 
     private fun imageReady() {
+
         startPostponedEnterTransition()
     }
 

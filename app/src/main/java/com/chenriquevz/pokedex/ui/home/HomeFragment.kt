@@ -38,7 +38,9 @@ class HomeFragment : Fragment(), Injectable {
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         progressBar = _binding?.homeProgressbar!!
+
         waitForTransition(_binding?.homeRecyclerview!!)
+
         val rootView = _binding?.root
         _context = rootView!!.context
 
@@ -46,11 +48,6 @@ class HomeFragment : Fragment(), Injectable {
         setRecyclerView()
 
         return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun setRecyclerView() {
@@ -93,18 +90,21 @@ class HomeFragment : Fragment(), Injectable {
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem.actionView as SearchView
-        searchView.isIconified = false
         searchView.maxWidth = Int.MAX_VALUE
         searchView.queryHint = getString(R.string.search_hint)
-        searchView.clearFocus()
+
 
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
 
                 if (query.isNotEmpty() && query.isLettersOrDigits()) {
+
                     val action = HomeFragmentDirections.homeToPokemon(query)
                     navController.navigate(action)
+
+                    //TODO - fix of hardware enter button
+                  //  searchView.clearFocus()
                 } else {
                     _context.toast(getString(R.string.search_error))
                 }
