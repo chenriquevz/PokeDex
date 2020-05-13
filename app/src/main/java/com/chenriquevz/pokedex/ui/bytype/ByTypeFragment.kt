@@ -16,6 +16,7 @@ import com.chenriquevz.pokedex.di.Injectable
 import com.chenriquevz.pokedex.di.injector
 import com.chenriquevz.pokedex.di.viewModel
 import com.chenriquevz.pokedex.utils.toastLong
+import com.chenriquevz.pokedex.utils.waitForTransition
 
 class ByTypeFragment : Fragment(), Injectable {
 
@@ -35,6 +36,9 @@ class ByTypeFragment : Fragment(), Injectable {
     ): View? {
         _binding = FragmentBytypeBinding.inflate(inflater, container, false)
         progressBar = _binding?.typeProgressbar!!
+
+        waitForTransition(_binding?.bytypeRecyclerview!!)
+
 
         val rootView = _binding?.root
         _context = rootView!!.context
