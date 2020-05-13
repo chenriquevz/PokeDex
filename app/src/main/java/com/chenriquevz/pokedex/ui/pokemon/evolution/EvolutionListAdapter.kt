@@ -28,7 +28,7 @@ class EvolutionListAdapter : ListAdapter<PokemonFirstToSecondChain, RecyclerView
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<PokemonFirstToSecondChain>() {
             override fun areItemsTheSame(oldItem: PokemonFirstToSecondChain, newItem: PokemonFirstToSecondChain): Boolean =
-                oldItem.pokemonFirst?.localID == newItem.pokemonFirst?.localID
+                oldItem == newItem
 
             override fun areContentsTheSame(oldItem: PokemonFirstToSecondChain, newItem: PokemonFirstToSecondChain): Boolean =
                 oldItem.pokemonFirst == newItem.pokemonFirst

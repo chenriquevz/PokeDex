@@ -31,6 +31,8 @@ class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
             Glide.with(context)
                 .load(result.id.idToImageRequest())
                 .fitCenter()
+               // .dontAnimate()
+               // .dontTransform()
                 .placeholder(R.drawable.ic_pokemonloading)
                 .error(
                     Glide.with(context)

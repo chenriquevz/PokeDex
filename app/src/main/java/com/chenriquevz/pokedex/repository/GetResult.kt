@@ -73,7 +73,7 @@ object GetResult {
         recursiveSpecies: suspend (A) -> Unit
     ): LiveData<Result<T>> =
         liveData(Dispatchers.IO) {
-            emit(Result.loading<T>())
+            //emit(Result.loading<T>())
             val source = databaseQuery.invoke().map {
                 Result.success(
                     it

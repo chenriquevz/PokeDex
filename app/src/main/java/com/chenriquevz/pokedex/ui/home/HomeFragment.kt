@@ -100,7 +100,7 @@ class HomeFragment : Fragment(), Injectable {
 
                 if (query.isNotEmpty() && query.isLettersOrDigits()) {
 
-                    val action = HomeFragmentDirections.homeToPokemon(query)
+                    val action = HomeFragmentDirections.homeToPokemon(query.replace(" ", "-"))
                     navController.navigate(action)
 
                     //TODO - fix of hardware enter button

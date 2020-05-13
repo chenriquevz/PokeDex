@@ -49,7 +49,11 @@ fun Int.idToImageRequest(): String {
     return "https://assets.pokemon.com/assets/cms2/img/pokedex/full/$format.png"
 }
 
-fun String.imageRequestToId(): Int = removePrefix("https://assets.pokemon.com/assets/cms2/img/pokedex/full/").substringAfterLast("/").replaceAfterLast("_", "").replace("_", "").toInt()
+fun String.imageRequestToId(): Int =
+    removePrefix("https://assets.pokemon.com/assets/cms2/img/pokedex/full/")
+        .substringAfterLast("/")
+        .replaceAfterLast("_", "")
+        .replace("_", "").toInt()
 
 fun Int.urlVarietyConverter(variety: Int): String {
 
@@ -67,7 +71,7 @@ fun String.replaceDashCapitalizeWords() =
     replace("-", " ").split(" ").joinToString(" ") { it.capitalize() }
 
 fun String.isLettersOrDigits(): Boolean {
-    return this.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' }
+    return this.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' || it in " " }
         .length == this.length
 }
 

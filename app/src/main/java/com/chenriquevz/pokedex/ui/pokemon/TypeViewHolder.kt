@@ -2,6 +2,7 @@ package com.chenriquevz.pokedex.ui.pokemon
 
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -24,6 +25,8 @@ class TypeViewHolder(private val binding: ViewholderTypeBinding) :
             binding.pokemonType.text = result.type.nameGeneral.replaceDashCapitalizeWords()
 
             setColorByType(context, result.type.nameGeneral)
+
+            Log.d("teste-type", "${result.type.nameGeneral}")
 
             binding.pokemonType.setOnClickListener {
                 Navigation.findNavController(it).navigate(
