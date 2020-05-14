@@ -1,6 +1,7 @@
 package com.chenriquevz.pokedex.ui.pokemon
 
 import androidx.lifecycle.*
+import com.chenriquevz.pokedex.model.PokemonSpeciesComplete
 import com.chenriquevz.pokedex.repository.PokemonRepository
 import com.chenriquevz.pokedex.utils.urlEvolutiontoInt
 import com.chenriquevz.pokedex.utils.urlSpeciestoInt
@@ -21,11 +22,22 @@ class PokemonViewModel @AssistedInject constructor(
     fun pokemonVarieties(variety: Int) = repository.getPokemon(variety)
 
     private val _firstPokemonName = MutableLiveData<String?>()
+    //private val _ = MutableLiveData<String?>()
+
     val firstPokemonName: LiveData<String?> = _firstPokemonName
 
     val species = Transformations.switchMap(pokemon) {
         _firstPokemonName.postValue(it.data?.pokemonGeneral?.name)
         repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral?.urlSpeciestoInt())
+    }
+
+    val speciesComplete = Transformations.map(species) { data ->
+
+        PokemonSpeciesComplete(
+            firstPokemonName.value,
+            data
+        )
+
     }
 
     val evolutionChain = Transformations.switchMap(species) {

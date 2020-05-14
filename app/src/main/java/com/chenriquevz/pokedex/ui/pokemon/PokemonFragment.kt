@@ -16,6 +16,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -35,7 +36,8 @@ import com.chenriquevz.pokedex.ui.pokemon.evolution.EvolutionListAdapter
 import com.chenriquevz.pokedex.utils.*
 
 
-class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,  View.OnTouchListener, Injectable {
+class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, View.OnTouchListener,
+    Injectable {
 
     private val pokemonViewModel by viewModel(this) {
         injector.pokemonViewModelFactory.create(args.pokemonID)
@@ -48,7 +50,11 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,  View.On
     private var _binding: FragmentPokemonBinding? = null
     private val _typeListAdapter = TypeListAdapter()
     private val _abilitiesListAdapter = AbilityListAdapter()
-    private val _viewPagerAdapter = CarrosselAdapter() {imageReady()}
+    private val _evolutionListAdapter = EvolutionListAdapter()
+    private var layoutEvolution: GridLayoutManager? = null
+    private lateinit var recyclerViewEvolution: RecyclerView
+    private val _viewPagerAdapter = CarrosselAdapter() { imageReady() }
+    private lateinit var viewPager: ViewPager2
     private var userSelectSpinner = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,14 +130,12 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,  View.On
         recyclerViewAbility?.adapter = _abilitiesListAdapter
         recyclerViewAbility?.layoutManager = layoutAbility
 
-        val viewPager = _binding!!.pokemonPokemonImage
+        recyclerViewEvolution = _binding?.pokemonEvolutionRecycler!!
+        recyclerViewEvolution.adapter = _evolutionListAdapter
+
+        viewPager = _binding!!.pokemonPokemonImage
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = _viewPagerAdapter
-
-        pokemonViewModel.viewPagerSelected
-            .observe(viewLifecycleOwner, Observer { page ->
-                viewPager.currentItem = page
-            })
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
@@ -322,8 +326,14 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,  View.On
         val spritesNotNull = sprites.filterNotNull().map {
             PokemonCarrossel(data?.pokemonGeneral?.id!!, it)
         }
-
         _viewPagerAdapter.submitList(spritesNotNull)
+
+        pokemonViewModel.viewPagerSelected
+            .observe(viewLifecycleOwner, Observer { page ->
+
+                viewPager.currentItem = page
+            })
+
 
     }
 
@@ -391,19 +401,21 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,  View.On
             if (evolutionChain.pokemonChainFirst.size > 2) 4 else evolutionChain.pokemonChainFirst.size
         if (firstEvolutionCount > 0) {
             _binding?.pokemonEvolutionArrow?.visibility = View.VISIBLE
-            val recyclerViewEvolution = _binding?.pokemonEvolutionRecycler
-            val layoutType =
-                GridLayoutManager(
+
+            if (layoutEvolution == null) {
+                layoutEvolution = GridLayoutManager(
                     _context,
                     firstEvolutionCount,
                     LinearLayoutManager.VERTICAL,
                     false
                 )
-            val evolutionListAdapter = EvolutionListAdapter()
-            recyclerViewEvolution?.adapter = evolutionListAdapter
-            recyclerViewEvolution?.layoutManager = layoutType
 
-            evolutionListAdapter.submitList(evolutionChain.pokemonChainFirst)
+                recyclerViewEvolution.layoutManager = layoutEvolution
+            }
+
+
+
+            _evolutionListAdapter.submitList(evolutionChain.pokemonChainFirst)
         }
 
     }
@@ -417,8 +429,6 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,  View.On
         super.onDestroyView()
 
     }
-
-
 
 
 }

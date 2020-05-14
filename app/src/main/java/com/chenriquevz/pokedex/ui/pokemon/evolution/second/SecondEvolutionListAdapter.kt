@@ -23,7 +23,6 @@ class SecondEvolutionListAdapter : ListAdapter<EvolutionChainSecond, RecyclerVie
         }
     }
 
-    override fun getItemViewType(position: Int) = R.layout.viewholder_homelistadapter
 
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<EvolutionChainSecond>() {
@@ -31,7 +30,7 @@ class SecondEvolutionListAdapter : ListAdapter<EvolutionChainSecond, RecyclerVie
                 oldItem.localID == newItem.localID
 
             override fun areContentsTheSame(oldItem: EvolutionChainSecond, newItem: EvolutionChainSecond): Boolean =
-                oldItem == newItem
+                oldItem.species.nameGeneral == newItem.species.nameGeneral
         }
     }
 

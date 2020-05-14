@@ -1,6 +1,7 @@
 package com.chenriquevz.pokedex.ui.bytype
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -46,7 +47,6 @@ class ByTypeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
                 context.getString(R.string.homePokemon_transition_name, result.id)
             binding.homePokemonID.transitionName =
                 context.getString(R.string.homePokemon_transition_id, result.id)
-
 
 
             binding.homeCard.setOnClickListener {

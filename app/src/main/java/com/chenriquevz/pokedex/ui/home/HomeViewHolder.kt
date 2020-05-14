@@ -1,6 +1,7 @@
 package com.chenriquevz.pokedex.ui.home
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -27,12 +28,11 @@ class HomeViewHolder(private val binding: ViewholderHomelistadapterBinding) :
                 context.getString(R.string.pokemonid_display, result.id)
             binding.homePokemonName.text = result.name.replaceDashCapitalizeWords()
 
-
             Glide.with(context)
                 .load(result.id.idToImageRequest())
                 .fitCenter()
-               // .dontAnimate()
-               // .dontTransform()
+                // .dontAnimate()
+                // .dontTransform()
                 .placeholder(R.drawable.ic_pokemonloading)
                 .error(
                     Glide.with(context)
