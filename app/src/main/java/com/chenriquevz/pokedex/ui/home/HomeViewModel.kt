@@ -12,6 +12,5 @@ class HomeViewModel @Inject constructor(repository: PokemonRepository) : ViewMod
 
     val networkErrors: LiveData<String> = pokemonList.networkErrors
 
-
 }
 

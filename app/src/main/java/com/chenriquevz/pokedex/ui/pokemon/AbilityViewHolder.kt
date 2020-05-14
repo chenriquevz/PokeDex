@@ -20,7 +20,6 @@ class AbilityViewHolder(private val binding: ViewholderAbilityBinding) :
         if (result != null) {
             binding.pokemonAbility.text = result.ability.nameGeneral.replaceDashCapitalizeWords()
 
-            Log.d("teste-tAbility", "${result.ability.nameGeneral.replaceDashCapitalizeWords()}")
 
             binding.pokemonAbility.setOnClickListener {
 

@@ -56,7 +56,6 @@ class CarrosselViewHolder(private val binding: ViewholderCarrosselBinding) :
 
                     if (adapterPosition == 0) {
                         imageReady()
-                        Log.d("teste-imagem", "item selected")
                     }
 
 

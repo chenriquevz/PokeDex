@@ -26,7 +26,6 @@ class TypeViewHolder(private val binding: ViewholderTypeBinding) :
 
             setColorByType(context, result.type.nameGeneral)
 
-            Log.d("teste-type", "${result.type.nameGeneral}")
 
             binding.pokemonType.setOnClickListener {
                 Navigation.findNavController(it).navigate(

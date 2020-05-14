@@ -35,7 +35,7 @@ import com.chenriquevz.pokedex.ui.pokemon.evolution.EvolutionListAdapter
 import com.chenriquevz.pokedex.utils.*
 
 
-class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectable {
+class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,  View.OnTouchListener, Injectable {
 
     private val pokemonViewModel by viewModel(this) {
         injector.pokemonViewModelFactory.create(args.pokemonID)
@@ -49,7 +49,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     private val _typeListAdapter = TypeListAdapter()
     private val _abilitiesListAdapter = AbilityListAdapter()
     private val _viewPagerAdapter = CarrosselAdapter() {imageReady()}
-
+    private var userSelectSpinner = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +74,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
         spinner = _binding?.pokemonSpinner!!
         spinner.onItemSelectedListener = this
+        spinner.setOnTouchListener(this)
         progressBar = _binding?.pokemonProgressbar!!
 
         setData()
@@ -173,10 +174,6 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
                 if (species != null) {
 
                     populateSpecies(species)
-                    Log.d(
-                        "teste-first",
-                        "${species.pokemonVarieties?.firstOrNull()}"
-                    )
 
                 }
             })
@@ -197,28 +194,35 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
     }
 
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        v?.performClick()
+        userSelectSpinner = true
+        return false
+    }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
 
-        Log.d("teste", "item selected")
+        if (userSelectSpinner) {
 
-        val entry: PokemonVarieties = parent.selectedItem as PokemonVarieties
+            userSelectSpinner = false
+            val entry: PokemonVarieties = parent.selectedItem as PokemonVarieties
 
-        pokemonViewModel.updateSelectedSpecies(position)
+            pokemonViewModel.updateSelectedSpecies(position)
 
-        pokemonViewModel.pokemonVarieties(entry.pokemonVariety.urlGeneral.urlPokemonToID())
-            .observe(viewLifecycleOwner, Observer { result ->
-                if (result != null) {
-                    populateBasic(result)
-                }
+            pokemonViewModel.pokemonVarieties(entry.pokemonVariety.urlGeneral.urlPokemonToID())
+                .observe(viewLifecycleOwner, Observer { result ->
+                    if (result != null) {
+                        populateBasic(result)
+                    }
 
-                pokemonViewModel.species
-                    .observe(viewLifecycleOwner, Observer { species ->
-                        if (species != null) {
-                            populateImages(result, species)
-                        }
-                    })
-            })
+                    pokemonViewModel.species
+                        .observe(viewLifecycleOwner, Observer { species ->
+                            if (species != null) {
+                                populateImages(result, species)
+                            }
+                        })
+                })
+        }
 
     }
 
@@ -319,7 +323,6 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
             PokemonCarrossel(data?.pokemonGeneral?.id!!, it)
         }
 
-        Log.d("teste-imagem", "${spritesNotNull.first().pokemonID}  ${spritesNotNull.first().urlString}")
         _viewPagerAdapter.submitList(spritesNotNull)
 
     }
@@ -344,19 +347,15 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
                     android.R.layout.simple_spinner_dropdown_item,
                     varieties
                 )
-                Log.d("teste-original", "${varieties.firstOrNull()}")
 
                 spinner.adapter = adapter
                 spinner.visibility = View.VISIBLE
 
             })
 
-
-
             pokemonViewModel.selectedSpecies.observe(viewLifecycleOwner, Observer { selection ->
-
+                userSelectSpinner = true
                 spinner.setSelection(selection)
-
             })
 
         }
@@ -418,6 +417,8 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         super.onDestroyView()
 
     }
+
+
 
 
 }
