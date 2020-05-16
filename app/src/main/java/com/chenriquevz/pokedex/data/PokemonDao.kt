@@ -8,15 +8,11 @@ import com.chenriquevz.pokedex.data.relations.PokemonEvolutionRelation
 import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
 import com.chenriquevz.pokedex.data.relations.PokemonSpeciesRelation
 import com.chenriquevz.pokedex.model.*
+import com.chenriquevz.pokedex.utils.getDistinct
 
 @Dao
 interface PokemonDao {
 
-    @Transaction
-    @Query("SELECT * FROM PokemonByNumber ORDER BY id ASC")
-    fun getListByNumber(): LiveData<List<PokemonByNumber>>
-
-    @Transaction
     @Query("SELECT * FROM PokemonByNumber ORDER BY id ASC")
     fun getListByNumberFactory(): DataSource.Factory<Int, PokemonByNumber>
 
@@ -29,26 +25,6 @@ interface PokemonDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertListByType(pokemonList: List<PokemonByType>)
-
-    @Transaction
-    @Query("SELECT * FROM PokemonGeneral WHERE id = :id")
-    fun getGeneral(id: Int): LiveData<PokemonGeneralRelation?>
-
-    @Transaction
-    @Query("SELECT * FROM PokemonGeneral WHERE name = :name")
-    fun getGeneral(name: String): LiveData<PokemonGeneralRelation?>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGeneralID(pokemon: PokemonGeneral)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGeneralAbilities(pokemon: List<AbilitiesList>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGeneralStats(pokemon: List<Stats>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGeneralType(pokemon: List<Type>)
 
     @Transaction
     @Query("SELECT * FROM PokemonAbility WHERE id = :id")

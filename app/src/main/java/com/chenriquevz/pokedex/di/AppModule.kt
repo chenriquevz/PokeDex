@@ -20,6 +20,11 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun providePokemonDetailDao(db: PokemonDB) = db.pokemonDetail()
+
+
+    @Singleton
+    @Provides
     fun provideRetroFit() = PokemonService.create()
 
 }

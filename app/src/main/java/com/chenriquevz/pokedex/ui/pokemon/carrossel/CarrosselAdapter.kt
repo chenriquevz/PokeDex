@@ -4,14 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.chenriquevz.pokedex.R
-import com.chenriquevz.pokedex.data.relations.PokemonFirstToSecondChain
-import com.chenriquevz.pokedex.model.PokemonCarrossel
-import com.chenriquevz.pokedex.ui.pokemon.evolution.EvolutionListAdapter
-import com.chenriquevz.pokedex.ui.pokemon.evolution.EvolutionViewHolder
 
 class CarrosselAdapter(private val imageReady: () -> Unit) :
-    ListAdapter<PokemonCarrossel, RecyclerView.ViewHolder>(
+    ListAdapter<String, RecyclerView.ViewHolder>(
         REPO_COMPARATOR
     ) {
 
@@ -30,18 +25,18 @@ class CarrosselAdapter(private val imageReady: () -> Unit) :
 
 
     companion object {
-        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<PokemonCarrossel>() {
+        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<String>() {
             override fun areItemsTheSame(
-                oldItem: PokemonCarrossel,
-                newItem: PokemonCarrossel
+                oldItem: String,
+                newItem: String
             ): Boolean =
-                oldItem.urlString == newItem.urlString
+                oldItem == newItem
 
             override fun areContentsTheSame(
-                oldItem: PokemonCarrossel,
-                newItem: PokemonCarrossel
+                oldItem: String,
+                newItem: String
             ): Boolean =
-                oldItem.pokemonID == newItem.pokemonID
+                oldItem == newItem
         }
     }
 

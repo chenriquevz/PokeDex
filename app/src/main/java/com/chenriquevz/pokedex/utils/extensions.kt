@@ -2,10 +2,17 @@ package com.chenriquevz.pokedex.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import com.chenriquevz.pokedex.data.relations.PokemonEvolutionRelation
+import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
+import com.chenriquevz.pokedex.data.relations.PokemonSpeciesRelation
 import com.chenriquevz.pokedex.model.GeneralEntry
 import com.chenriquevz.pokedex.model.PokemonByNumber
 
@@ -101,5 +108,141 @@ fun Fragment.waitForTransition(targetView: View) {
 
 fun Fragment.readyForTransition(targetView: View) {
     this.startPostponedEnterTransition()
+}
+
+fun <T, A, B, C, D> LiveData<A>.combineAndCompute(
+    other1: LiveData<B>,
+    other2: LiveData<C>,
+    other3: LiveData<D>,
+    onChange: (A, B, C, D) -> T
+): MediatorLiveData<T> {
+
+    var source0emitted = false
+    var source1emitted = false
+    var source2emitted = false
+    var source3emitted = false
+
+    val result = MediatorLiveData<T>()
+
+    val mergeF = {
+        val source0Value = this.value
+        val source1Value = other1.value
+        val source2Value = other2.value
+        val source3Value = other3.value
+
+
+        if (source0emitted && source1emitted && source2emitted && source3emitted) {
+            Log.d("combine", "${source0Value != null}  ${source1Value != null}  ${source2Value != null}  ${source3Value != null}")
+            result.value =
+                onChange.invoke(source0Value!!, source1Value!!, source2Value!!, source3Value!!)
+        }
+    }
+
+    result.addSource(this) {if(it != null) {source0emitted = true; mergeF.invoke()} }
+    result.addSource(other1) { if(it != null) {source1emitted = true; mergeF.invoke()}; }
+    result.addSource(other2) { if(it != null) {source2emitted = true; mergeF.invoke()}; }
+    result.addSource(other3) { if(it != null) {source3emitted = true; mergeF.invoke()}; }
+
+    return result
+}
+
+fun <T> LiveData<T>.getDistinct(): LiveData<T> {
+    val distinctLiveData = MediatorLiveData<T>()
+    distinctLiveData.addSource(this, object : Observer<T> {
+        private var initialized = false
+        private var lastObj: T? = null
+        override fun onChanged(obj: T?) {
+
+
+            Log.d("teste-mediator-distinct", "${obj != lastObj} new ${obj} // old ${lastObj}")
+
+            if (!initialized) {
+                initialized = true
+                lastObj = obj
+                distinctLiveData.postValue(lastObj)
+            } else if ((obj == null && lastObj != null) || obj != lastObj
+            ) {
+                lastObj = obj
+                distinctLiveData.postValue(lastObj)
+            }
+        }
+    })
+    return distinctLiveData
+}
+
+fun LiveData<PokemonSpeciesRelation?>.getDistinctSpecies(): LiveData<PokemonSpeciesRelation?> {
+    val distinctLiveData = MediatorLiveData<PokemonSpeciesRelation?>()
+    distinctLiveData.addSource(this, object : Observer<PokemonSpeciesRelation?> {
+        private var initialized = false
+        private var lastObj: PokemonSpeciesRelation? = null
+        override fun onChanged(obj: PokemonSpeciesRelation?) {
+
+           // if (obj?.pokemonVarieties.isNullOrEmpty()) return
+            Log.d("teste-mediator-species", "${obj != lastObj} new ${obj} // old ${lastObj}")
+
+            if (!initialized) {
+                initialized = true
+                lastObj = obj
+                distinctLiveData.postValue(lastObj)
+            } else if ((obj == null && lastObj != null) || obj != lastObj) {
+                lastObj = obj
+                distinctLiveData.postValue(lastObj)
+            }
+        }
+    })
+    return distinctLiveData
+}
+
+
+
+fun LiveData<PokemonEvolutionRelation?>.getDistinctEvolution(): LiveData<PokemonEvolutionRelation?> {
+    val distinctLiveData = MediatorLiveData<PokemonEvolutionRelation?>()
+    distinctLiveData.addSource(this, object : Observer<PokemonEvolutionRelation?> {
+        private var initialized = false
+        private var lastObj: PokemonEvolutionRelation? = null
+        override fun onChanged(obj: PokemonEvolutionRelation?) {
+
+            Log.d("teste-mediator-evolution", "${obj != lastObj} new ${obj?.pokemonChainFirst?.isEmpty()}")
+
+             if (obj?.pokemonChainFirst.isNullOrEmpty() || obj?.pokemonChainFirst?.firstOrNull()?.pokemonSecond.isNullOrEmpty()) return
+
+
+            if (!initialized) {
+                initialized = true
+                lastObj = obj
+                distinctLiveData.postValue(lastObj)
+            } else if ((obj == null && lastObj != null) || obj != lastObj) {
+                lastObj = obj
+                distinctLiveData.postValue(lastObj)
+            }
+        }
+    })
+    return distinctLiveData
+}
+
+
+fun LiveData<PokemonGeneralRelation?>.getDistinctPokemon(): LiveData<PokemonGeneralRelation?> {
+    val distinctLiveData = MediatorLiveData<PokemonGeneralRelation?>()
+    distinctLiveData.addSource(this, object : Observer<PokemonGeneralRelation?> {
+        private var initialized = false
+        private var lastObj: PokemonGeneralRelation? = null
+        override fun onChanged(obj: PokemonGeneralRelation?) {
+
+            if (obj?.stats.isNullOrEmpty() || obj?.abilitiesList.isNullOrEmpty() || obj?.type.isNullOrEmpty()
+            ) return
+
+            Log.d("teste-mediator-pokemon", "${obj != lastObj} new ${obj} // old ${lastObj}")
+
+            if (!initialized) {
+                initialized = true
+                lastObj = obj
+                distinctLiveData.postValue(lastObj)
+            } else if ((obj == null && lastObj != null) || obj != lastObj) {
+                lastObj = obj
+                distinctLiveData.postValue(lastObj)
+            }
+        }
+    })
+    return distinctLiveData
 }
 

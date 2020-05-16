@@ -1,9 +1,10 @@
 package com.chenriquevz.pokedex.model
 
-import androidx.lifecycle.LiveData
 import com.chenriquevz.pokedex.data.relations.PokemonSpeciesRelation
 
-class PokemonSpeciesComplete (
-    val pokemonID: String?,
+data class PokemonSpeciesComplete (
+    val pokemonID: Int,
+    val pokemonName: String,
+    val pokemonSprites: Sprites,
     val pokemonSpecies: PokemonSpeciesRelation?
 )

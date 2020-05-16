@@ -1,12 +1,14 @@
 package com.chenriquevz.pokedex.ui.pokemon
 
+import android.util.Log
 import androidx.lifecycle.*
+import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
 import com.chenriquevz.pokedex.model.PokemonSpeciesComplete
+import com.chenriquevz.pokedex.model.Sprites
 import com.chenriquevz.pokedex.repository.PokemonRepository
-import com.chenriquevz.pokedex.utils.urlEvolutiontoInt
-import com.chenriquevz.pokedex.utils.urlSpeciestoInt
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import com.chenriquevz.pokedex.utils.*
 
 class PokemonViewModel @AssistedInject constructor(
     private val repository: PokemonRepository,
@@ -18,27 +20,46 @@ class PokemonViewModel @AssistedInject constructor(
         fun create(id: String): PokemonViewModel
     }
 
-    val pokemon = repository.pokemonDetail(id)
-    fun pokemonVarieties(variety: Int) = repository.getPokemon(variety)
+    private val _pokemonName = MutableLiveData<String>()
+    private val _pokemonID = MutableLiveData<Int>()
+    private val _pokemonSprites = MutableLiveData<Sprites>()
+    private val _pokemomChoice = MutableLiveData<String>()
+    private val pokemomChoice: LiveData<String> = _pokemomChoice.getDistinct()
 
-    private val _firstPokemonName = MutableLiveData<String?>()
-    //private val _ = MutableLiveData<String?>()
+    init {
+        _pokemomChoice.postValue(id)
+    }
 
-    val firstPokemonName: LiveData<String?> = _firstPokemonName
+    val pokemon = Transformations.switchMap(pokemomChoice) {
+        repository.pokemonDetail(it)
+    }
+
+
+    fun pokemonVarieties(variety: Int): LiveData<PokemonGeneralRelation> =
+        Transformations.map(repository.getPokemon(variety)) {
+            _pokemonName.postValue(it?.pokemonGeneral?.name)
+            _pokemonID.postValue(it?.pokemonGeneral?.id)
+            _pokemonSprites.postValue(it?.pokemonGeneral?.sprites)
+            it
+        }
 
     val species = Transformations.switchMap(pokemon) {
-        _firstPokemonName.postValue(it.data?.pokemonGeneral?.name)
+        _pokemonName.postValue(it.data?.pokemonGeneral?.name)
+        _pokemonID.postValue(it.data?.pokemonGeneral?.id)
+        _pokemonSprites.postValue(it.data?.pokemonGeneral?.sprites)
         repository.getSpecies(it.data?.pokemonGeneral?.species?.urlGeneral?.urlSpeciestoInt())
     }
 
-    val speciesComplete = Transformations.map(species) { data ->
 
-        PokemonSpeciesComplete(
-            firstPokemonName.value,
-            data
-        )
+    val speciesComplete: LiveData<PokemonSpeciesComplete?> =
+        species.getDistinct().combineAndCompute(
+            _pokemonName.getDistinct(),
+            _pokemonID.getDistinct(),
+            _pokemonSprites.getDistinct()
+        ) { a, b, c, d ->
+            PokemonSpeciesComplete(c, b, d, a)
+        }.getDistinct()
 
-    }
 
     val evolutionChain = Transformations.switchMap(species) {
         repository.getEvolution(it?.pokemonSpecies?.evolutionChain?.url?.urlEvolutiontoInt())
@@ -47,16 +68,22 @@ class PokemonViewModel @AssistedInject constructor(
     private val _selectedSpecies = MutableLiveData<Int>()
     val selectedSpecies: LiveData<Int> = _selectedSpecies
 
-    fun updateSelectedSpecies(newSelection: Int) {
-        if (_selectedSpecies.value == newSelection) return
+    fun updateSelectedSpecies(newSelection: Int, newChoice: String) {
+        if (_selectedSpecies.value != newSelection) {
 
-        _selectedSpecies.postValue(newSelection)
+            _selectedSpecies.postValue(newSelection)
+            _pokemomChoice.postValue(newChoice)
+        }
     }
 
     private val _viewPagerSelected = MutableLiveData<Int>()
     val viewPagerSelected: LiveData<Int> = _viewPagerSelected
 
     fun updatePageSelected(newSelection: Int) {
-        _viewPagerSelected.postValue(newSelection)
+        if (_viewPagerSelected.value != newSelection) {
+
+            _viewPagerSelected.postValue(newSelection)
+        }
+
     }
 }

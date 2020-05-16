@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.chenriquevz.pokedex.api.Result
+import com.chenriquevz.pokedex.utils.getDistinct
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
@@ -83,7 +84,6 @@ object GetResult {
 
             val responseStatus = networkCall.invoke()
             if (responseStatus.status == Result.Status.SUCCESS) {
-
                 saveCallResult(responseStatus.data!!)
                 recursiveAbility(responseStatus.data)
                 recursiveSpecies(responseStatus.data)
