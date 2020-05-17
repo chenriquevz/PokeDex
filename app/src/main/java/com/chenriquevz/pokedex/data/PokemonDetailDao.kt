@@ -1,19 +1,15 @@
 package com.chenriquevz.pokedex.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
 import androidx.room.*
 import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
 import com.chenriquevz.pokedex.model.AbilitiesList
 import com.chenriquevz.pokedex.model.PokemonGeneral
 import com.chenriquevz.pokedex.model.Stats
 import com.chenriquevz.pokedex.model.Type
-import com.chenriquevz.pokedex.utils.getDistinct
 import com.chenriquevz.pokedex.utils.getDistinctPokemon
 
-interface BaseDao {
+interface PokemonBaseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGeneralID(pokemon: PokemonGeneral)
@@ -30,7 +26,7 @@ interface BaseDao {
 }
 
 @Dao
-abstract class PokemonDetailDao: BaseDao {
+abstract class PokemonDetailDao: PokemonBaseDao {
 
     @Transaction
     @Query("SELECT * FROM PokemonGeneral WHERE id = :id")

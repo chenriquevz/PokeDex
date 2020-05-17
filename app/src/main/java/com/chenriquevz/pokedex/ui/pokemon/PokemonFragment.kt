@@ -137,14 +137,13 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = _viewPagerAdapter
-        var pageOld = 0
+
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
             override fun onPageSelected(page: Int) {
-                if (pageOld != page) {
-                    pageOld = page
+
                     pokemonViewModel.updatePageSelected(page)
-                }
+
             }
         })
 
@@ -197,6 +196,18 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
                 }
             })
 
+        pokemonViewModel.selectedSpecies.observe(viewLifecycleOwner, Observer { selection ->
+            Log.d("teste-new", "spinner ${selection}")
+            spinner.setSelection(selection)
+
+        })
+
+        pokemonViewModel.viewPagerSelected
+            .observe(viewLifecycleOwner, Observer { page ->
+                Log.d("teste-new", "viewpager $page")
+                viewPager.setCurrentItem(page, false)
+            })
+
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -209,14 +220,6 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
         val entry: PokemonVarieties = parent.selectedItem as PokemonVarieties
         pokemonViewModel.updateSelectedSpecies(position, entry.pokemonVariety.urlGeneral.urlPokemonToID().toString())
 
-
-        pokemonViewModel.selectedSpecies.observe(viewLifecycleOwner, Observer { selection ->
-            Log.d("teste-new", "spinner ${selection}")
-            spinner.setSelection(selection)
-
-        })
-
-
     }
 
 
@@ -227,7 +230,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
         _binding?.pokemonPokemonID?.text = getString(
             R.string.pokemonid_display,
-            data.pokemonGeneral?.id
+            data.pokemonGeneral.id
         )
 
         if (data.stats.isNotEmpty()) {
@@ -322,11 +325,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
         _viewPagerAdapter.submitList(sprites.filterNotNull())
 
-        pokemonViewModel.viewPagerSelected
-            .observe(viewLifecycleOwner, Observer { page ->
-                Log.d("teste-new", "viewpager $page")
-                viewPager.setCurrentItem(page, false)
-            })
+
 
 
     }
@@ -338,14 +337,14 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
         if (species.pokemonSpecies?.pokemonVarieties != null && species.pokemonSpecies.pokemonVarieties.size > 1) {
 
-            val pokemonSelected = species.pokemonSpecies.pokemonVarieties.first { it.pokemonVariety.nameGeneral == species.pokemonName }
-            val varieties = species.pokemonSpecies.pokemonVarieties
 
+            val varieties = species.pokemonSpecies.pokemonVarieties
+            val pokemonSelected = varieties.first { it.pokemonVariety.nameGeneral == species.pokemonName }
 
             val adapter = ArrayAdapter(
                 _context,
                 android.R.layout.simple_spinner_dropdown_item,
-                species.pokemonSpecies.pokemonVarieties
+                varieties
             )
 
             spinner.adapter = adapter

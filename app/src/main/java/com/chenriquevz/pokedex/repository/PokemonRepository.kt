@@ -1,14 +1,13 @@
 package com.chenriquevz.pokedex.repository
 
-import android.util.Log
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.distinctUntilChanged
 import androidx.paging.LivePagedListBuilder
 import com.chenriquevz.pokedex.api.PokemonService
 import com.chenriquevz.pokedex.api.Result
 import com.chenriquevz.pokedex.data.PokemonDao
 import com.chenriquevz.pokedex.data.PokemonDetailDao
+import com.chenriquevz.pokedex.data.PokemonSpeciesDao
 import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
 import com.chenriquevz.pokedex.model.*
 import com.chenriquevz.pokedex.repository.GetResult.responseIntoResult
@@ -25,14 +24,14 @@ import javax.inject.Inject
 class PokemonRepository @Inject constructor(
     private val dao: PokemonDao,
     private val daoDetail: PokemonDetailDao,
+    private val daoSpecies: PokemonSpeciesDao,
     private val pokemonApi: PokemonService
 ) {
 
 
     fun getAbility(ability: Int) = dao.getPokemonAbilities(ability)
-    fun getPokemon(id: Int) = daoDetail.getGeneralDistinct(id)
     fun getEvolution(id: Int?) = dao.getPokemonEvolutions(id)
-    fun getSpecies(id: Int?) = dao.getPokemonSpecies(id)
+    fun getSpecies(id: Int?) = daoSpecies.getPokemonSpeciesDistinct(id)
 
 
     fun listByNumber(coroutineScope: CoroutineScope): PokemonByNumberPaged {
@@ -131,8 +130,8 @@ class PokemonRepository @Inject constructor(
 
     private suspend fun pokemonSpeciesInsert(species: PokemonSpecies) {
 
-        dao.insertPokemonSpecies(species)
-        dao.insertPokemonSpeciesVarieties(species.varieties.map {
+        daoSpecies.insertPokemonSpecies(species)
+        daoSpecies.insertPokemonSpeciesVarieties(species.varieties.map {
             PokemonVarieties(
                 species.id,
                 it.isDefault,

@@ -37,16 +37,6 @@ interface PokemonDao {
     suspend fun insertPokemonAbilityEffect(pokemon: AbilityEffectEntries)
 
     @Transaction
-    @Query("SELECT * FROM PokemonSpecies WHERE id = :id")
-    fun getPokemonSpecies(id: Int?): LiveData<PokemonSpeciesRelation?>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPokemonSpecies(pokemon: PokemonSpecies)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPokemonSpeciesVarieties(pokemon: List<PokemonVarieties>)
-
-    @Transaction
     @Query("SELECT * FROM PokemonEvolution WHERE id = :id")
     fun getPokemonEvolutions(id: Int?): LiveData<PokemonEvolutionRelation?>
 

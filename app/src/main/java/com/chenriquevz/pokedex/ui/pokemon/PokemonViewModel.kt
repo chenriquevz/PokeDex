@@ -21,8 +21,20 @@ class PokemonViewModel @AssistedInject constructor(
     }
 
     private val _pokemonName = MutableLiveData<String>()
+    private val pokemonName = _pokemonName.getDistinct()
+
     private val _pokemonID = MutableLiveData<Int>()
+    private val pokemonID = _pokemonID.getDistinct()
+
     private val _pokemonSprites = MutableLiveData<Sprites>()
+    private val pokemonSprites = _pokemonSprites.getDistinct()
+
+    private val _selectedSpecies = MutableLiveData<Int>()
+    val selectedSpecies: LiveData<Int> = _selectedSpecies
+
+    private val _viewPagerSelected = MutableLiveData<Int>()
+    val viewPagerSelected: LiveData<Int> = _viewPagerSelected
+
     private val _pokemomChoice = MutableLiveData<String>()
     private val pokemomChoice: LiveData<String> = _pokemomChoice.getDistinct()
 
@@ -35,14 +47,6 @@ class PokemonViewModel @AssistedInject constructor(
     }
 
 
-    fun pokemonVarieties(variety: Int): LiveData<PokemonGeneralRelation> =
-        Transformations.map(repository.getPokemon(variety)) {
-            _pokemonName.postValue(it?.pokemonGeneral?.name)
-            _pokemonID.postValue(it?.pokemonGeneral?.id)
-            _pokemonSprites.postValue(it?.pokemonGeneral?.sprites)
-            it
-        }
-
     val species = Transformations.switchMap(pokemon) {
         _pokemonName.postValue(it.data?.pokemonGeneral?.name)
         _pokemonID.postValue(it.data?.pokemonGeneral?.id)
@@ -52,10 +56,10 @@ class PokemonViewModel @AssistedInject constructor(
 
 
     val speciesComplete: LiveData<PokemonSpeciesComplete?> =
-        species.getDistinct().combineAndCompute(
-            _pokemonName.getDistinct(),
-            _pokemonID.getDistinct(),
-            _pokemonSprites.getDistinct()
+        species.combineAndCompute(
+            pokemonName,
+            pokemonID,
+            pokemonSprites
         ) { a, b, c, d ->
             PokemonSpeciesComplete(c, b, d, a)
         }.getDistinct()
@@ -65,8 +69,7 @@ class PokemonViewModel @AssistedInject constructor(
         repository.getEvolution(it?.pokemonSpecies?.evolutionChain?.url?.urlEvolutiontoInt())
     }
 
-    private val _selectedSpecies = MutableLiveData<Int>()
-    val selectedSpecies: LiveData<Int> = _selectedSpecies
+
 
     fun updateSelectedSpecies(newSelection: Int, newChoice: String) {
         if (_selectedSpecies.value != newSelection) {
@@ -75,9 +78,6 @@ class PokemonViewModel @AssistedInject constructor(
             _pokemomChoice.postValue(newChoice)
         }
     }
-
-    private val _viewPagerSelected = MutableLiveData<Int>()
-    val viewPagerSelected: LiveData<Int> = _viewPagerSelected
 
     fun updatePageSelected(newSelection: Int) {
         if (_viewPagerSelected.value != newSelection) {

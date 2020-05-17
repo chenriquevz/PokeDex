@@ -22,6 +22,9 @@ class AppModule {
     @Provides
     fun providePokemonDetailDao(db: PokemonDB) = db.pokemonDetail()
 
+    @Singleton
+    @Provides
+    fun provideSpeciesDao(db: PokemonDB) = db.pokemonSpecies()
 
     @Singleton
     @Provides
