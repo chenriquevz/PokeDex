@@ -114,7 +114,7 @@ fun <T, A, B, C, D> LiveData<A>.combineAndCompute(
     other1: LiveData<B>,
     other2: LiveData<C>,
     other3: LiveData<D>,
-    onChange: (A, B, C, D) -> T
+    onChange: (A, B, C, D?) -> T
 ): MediatorLiveData<T> {
 
     var source0emitted = false
@@ -134,14 +134,14 @@ fun <T, A, B, C, D> LiveData<A>.combineAndCompute(
         if (source0emitted && source1emitted && source2emitted && source3emitted) {
             Log.d("combine", "${source0Value != null}  ${source1Value != null}  ${source2Value != null}  ${source3Value != null}")
             result.value =
-                onChange.invoke(source0Value!!, source1Value!!, source2Value!!, source3Value!!)
+                onChange.invoke(source0Value!!, source1Value!!, source2Value!!, source3Value)
         }
     }
 
-    result.addSource(this) {if(it != null) {source0emitted = true; mergeF.invoke()} }
-    result.addSource(other1) { if(it != null) {source1emitted = true; mergeF.invoke()}; }
-    result.addSource(other2) { if(it != null) {source2emitted = true; mergeF.invoke()}; }
-    result.addSource(other3) { if(it != null) {source3emitted = true; mergeF.invoke()}; }
+    result.addSource(this) {if(it != null) {source0emitted = true; mergeF.invoke()} else { source0emitted = false  } }
+    result.addSource(other1) { if(it != null) {source1emitted = true; mergeF.invoke()} else { source1emitted = false  } }
+    result.addSource(other2) { if(it != null) {source2emitted = true; mergeF.invoke()} else { source2emitted = false  } }
+    result.addSource(other3) { if(it != null) {source3emitted = true; mergeF.invoke()}}
 
     return result
 }
@@ -177,7 +177,7 @@ fun LiveData<PokemonSpeciesRelation?>.getDistinctSpecies(): LiveData<PokemonSpec
         private var lastObj: PokemonSpeciesRelation? = null
         override fun onChanged(obj: PokemonSpeciesRelation?) {
 
-           // if (obj?.pokemonVarieties.isNullOrEmpty()) return
+
             Log.d("teste-mediator-species", "${obj != lastObj} new ${obj} // old ${lastObj}")
 
             if (!initialized) {

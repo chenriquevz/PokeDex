@@ -26,7 +26,7 @@ class PokemonViewModel @AssistedInject constructor(
     private val _pokemonID = MutableLiveData<Int>()
     private val pokemonID = _pokemonID.getDistinct()
 
-    private val _pokemonSprites = MutableLiveData<Sprites>()
+    private val _pokemonSprites = MutableLiveData<Sprites?>()
     private val pokemonSprites = _pokemonSprites.getDistinct()
 
     private val _selectedSpecies = MutableLiveData<Int>()
@@ -67,7 +67,7 @@ class PokemonViewModel @AssistedInject constructor(
 
     val evolutionChain = Transformations.switchMap(species) {
         repository.getEvolution(it?.pokemonSpecies?.evolutionChain?.url?.urlEvolutiontoInt())
-    }
+    }.getDistinct()
 
 
 

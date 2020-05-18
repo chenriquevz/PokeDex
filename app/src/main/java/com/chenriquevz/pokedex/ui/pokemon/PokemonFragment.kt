@@ -54,15 +54,12 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
     private lateinit var recyclerViewEvolution: RecyclerView
     private val _viewPagerAdapter = CarrosselAdapter() { imageReady() }
     private lateinit var viewPager: ViewPager2
-    private var spinnerFirstConfig = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sharedElementEnterTransition =
-                // TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-            TransitionInflater.from(context)
-                .inflateTransition(R.transition.image_shared_element_transition)
+                 TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
     }
 
@@ -312,14 +309,14 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
         val sprites = listOf(
             primaryImage,
-            species.pokemonSprites.frontDefault,
-            species.pokemonSprites.backDefault,
-            species.pokemonSprites.frontShiny,
-            species.pokemonSprites.backShiny,
-            species.pokemonSprites.frontFemale,
-            species.pokemonSprites.backFemale,
-            species.pokemonSprites.frontShinyFemale,
-            species.pokemonSprites.backShinyFemale
+            species.pokemonSprites?.frontDefault,
+            species.pokemonSprites?.backDefault,
+            species.pokemonSprites?.frontShiny,
+            species.pokemonSprites?.backShiny,
+            species.pokemonSprites?.frontFemale,
+            species.pokemonSprites?.backFemale,
+            species.pokemonSprites?.frontShinyFemale,
+            species.pokemonSprites?.backShinyFemale
         )
 
 
