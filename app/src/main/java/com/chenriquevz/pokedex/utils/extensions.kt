@@ -132,7 +132,6 @@ fun <T, A, B, C, D> LiveData<A>.combineAndCompute(
 
 
         if (source0emitted && source1emitted && source2emitted && source3emitted) {
-            Log.d("combine", "${source0Value != null}  ${source1Value != null}  ${source2Value != null}  ${source3Value != null}")
             result.value =
                 onChange.invoke(source0Value!!, source1Value!!, source2Value!!, source3Value)
         }
@@ -152,9 +151,6 @@ fun <T> LiveData<T>.getDistinct(): LiveData<T> {
         private var initialized = false
         private var lastObj: T? = null
         override fun onChanged(obj: T?) {
-
-
-            Log.d("teste-mediator-distinct", "${obj != lastObj} new ${obj} // old ${lastObj}")
 
             if (!initialized) {
                 initialized = true
@@ -176,9 +172,6 @@ fun LiveData<PokemonSpeciesRelation?>.getDistinctSpecies(): LiveData<PokemonSpec
         private var initialized = false
         private var lastObj: PokemonSpeciesRelation? = null
         override fun onChanged(obj: PokemonSpeciesRelation?) {
-
-
-            Log.d("teste-mediator-species", "${obj != lastObj} new ${obj} // old ${lastObj}")
 
             if (!initialized) {
                 initialized = true
@@ -202,10 +195,7 @@ fun LiveData<PokemonEvolutionRelation?>.getDistinctEvolution(): LiveData<Pokemon
         private var lastObj: PokemonEvolutionRelation? = null
         override fun onChanged(obj: PokemonEvolutionRelation?) {
 
-            Log.d("teste-mediator-evolution", "${obj != lastObj} new ${obj?.pokemonChainFirst?.isEmpty()}")
-
              if (obj?.pokemonChainFirst.isNullOrEmpty() || obj?.pokemonChainFirst?.firstOrNull()?.pokemonSecond.isNullOrEmpty()) return
-
 
             if (!initialized) {
                 initialized = true
@@ -230,8 +220,6 @@ fun LiveData<PokemonGeneralRelation?>.getDistinctPokemon(): LiveData<PokemonGene
 
             if (obj?.stats.isNullOrEmpty() || obj?.abilitiesList.isNullOrEmpty() || obj?.type.isNullOrEmpty()
             ) return
-
-            Log.d("teste-mediator-pokemon", "${obj != lastObj} new ${obj} // old ${lastObj}")
 
             if (!initialized) {
                 initialized = true
