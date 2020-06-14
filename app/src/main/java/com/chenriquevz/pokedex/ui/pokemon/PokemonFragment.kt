@@ -151,9 +151,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
                 Result.Status.SUCCESS -> {
                     val data = result.data
                     if (data != null) {
-                        Log.d("teste-new", "basic")
                         populateBasic(result.data)
-
                     }
 
                 }
@@ -175,7 +173,6 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
             { species ->
 
                 if (species != null) {
-                    Log.d("teste-new", "species-complete")
                     populateImages(species)
                     populateSpecies(species)
 
@@ -187,21 +184,18 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
             Observer { evolution ->
 
                 if (evolution != null) {
-                    Log.d("teste-new", "evolution")
                     populateEvolution(evolution)
                     progressBar.visibility = View.GONE
                 }
             })
 
         pokemonViewModel.selectedSpecies.observe(viewLifecycleOwner, Observer { selection ->
-            Log.d("teste-new", "spinner ${selection}")
             spinner.setSelection(selection)
 
         })
 
         pokemonViewModel.viewPagerSelected
             .observe(viewLifecycleOwner, Observer { page ->
-                Log.d("teste-new", "viewpager $page")
                 viewPager.setCurrentItem(page, false)
             })
 
