@@ -2,6 +2,7 @@ package com.chenriquevz.pokedex.ui.pokemon.dialogability
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.chenriquevz.pokedex.databinding.FragmentDialogabilitiesBinding
 import com.chenriquevz.pokedex.di.Injectable
 import com.chenriquevz.pokedex.di.injector
 import com.chenriquevz.pokedex.di.viewModel
+import java.lang.Exception
 
 class AbilityDialogFragment : DialogFragment(), Injectable {
 
@@ -41,8 +43,10 @@ class AbilityDialogFragment : DialogFragment(), Injectable {
     private fun setData() {
         dialogAbilityViewModel.ability().observe(viewLifecycleOwner, Observer { result ->
 
-            _binding?.abilityDescription?.text =
-                result.abilityEffectEntries.firstOrNull()?.shortEffect
+                    _binding?.abilityDescription?.text =
+                        result.abilityEffectEntries?.firstOrNull()?.shortEffect
+
+
 
         })
     }

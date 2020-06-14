@@ -12,5 +12,5 @@ data class PokemonAbilityRelation(
         parentColumn = "id",
         entityColumn = "id"
     )
-    val abilityEffectEntries: List<AbilityEffectEntries> = emptyList()
+    val abilityEffectEntries: List<AbilityEffectEntries?>? = null
 )

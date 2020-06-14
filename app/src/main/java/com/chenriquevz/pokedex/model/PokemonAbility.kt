@@ -29,6 +29,7 @@ data class PokemonAbility (
 data class AbilityEffectEntries(
     val id: Int,
     @field:SerializedName("effect") val effect: String?,
+    @Embedded @field:SerializedName("language") val language: GeneralEntry?,
     @field:SerializedName("short_effect") val shortEffect: String?
 ){
     @PrimaryKey(autoGenerate = true)

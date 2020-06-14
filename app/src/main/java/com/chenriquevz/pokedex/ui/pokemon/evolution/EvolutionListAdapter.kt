@@ -38,7 +38,7 @@ class EvolutionListAdapter :
                 oldItem: PokemonFirstToSecondChain,
                 newItem: PokemonFirstToSecondChain
             ): Boolean =
-                oldItem.pokemonFirst?.species?.nameGeneral == newItem.pokemonFirst?.species?.nameGeneral
+                oldItem == newItem
 
 
         }

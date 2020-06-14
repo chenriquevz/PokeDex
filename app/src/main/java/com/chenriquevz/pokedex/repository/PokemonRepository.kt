@@ -1,5 +1,6 @@
 package com.chenriquevz.pokedex.repository
 
+import android.util.Log
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
@@ -191,8 +192,9 @@ class PokemonRepository @Inject constructor(
         dao.insertPokemonAbilityEffect(
             AbilityEffectEntries(
                 ability.id,
-                ability.effectEntries?.firstOrNull()?.effect,
-                ability.effectEntries?.firstOrNull()?.shortEffect
+                ability.effectEntries?.singleOrNull{ it.language?.nameGeneral == "en"}?.effect,
+                ability.effectEntries?.singleOrNull{ it.language?.nameGeneral == "en"}?.language,
+                ability.effectEntries?.singleOrNull{ it.language?.nameGeneral == "en"}?.shortEffect
             )
         )
     }
@@ -205,53 +207,6 @@ class PokemonRepository @Inject constructor(
 
 
         if (evolution.chain.evolvesTo != null) {
-
-            //Existe um issue relatado em https://github.com/PokeAPI/pokeapi/issues/163 sobre a chain do wurmple não seguir a lógica
-            //padrão da API. Foi feito um pull request mas aparentemente continua a mesma coisa.
-            if (evolution.chain.species.nameGeneral == "wurmple") {
-
-                val firstChain: MutableList<EvolutionChainFirst> = mutableListOf()
-                val secondChain: MutableList<EvolutionChainSecond> = mutableListOf()
-                firstChain.add(
-                    EvolutionChainFirst(
-                        evolution.id,
-                        evolution.id * 100.toLong(),
-                        evolution.chain.evolvesTo[0].species
-                    )
-                )
-
-                secondChain.add(
-                    EvolutionChainSecond(
-                        evolution.id * 100.toLong(),
-                        evolution.chain.evolvesTo[0].evolvesTo?.get(0)?.species!!
-                    )
-                )
-
-                firstChain.add(
-                    EvolutionChainFirst(
-                        evolution.id,
-                        evolution.id * 100 + 1.toLong(),
-                        evolution.chain.evolvesTo[0].evolvesTo?.get(1)?.species!!
-                    )
-                )
-
-                secondChain.add(
-                    EvolutionChainSecond(
-                        evolution.id * 100 + 1.toLong(),
-                        evolution.chain.evolvesTo[0].evolvesTo?.get(1)?.evolvesTo?.get(0)?.species!!
-                    )
-                )
-
-                dao.insertPokemonEvolutionsFirst(
-                    firstChain
-                )
-
-                dao.insertPokemonEvolutionsSecond(
-                    secondChain
-                )
-
-
-            } else {
 
                 val firstChain: MutableList<EvolutionChainFirst> = mutableListOf()
                 val secondChain: MutableList<EvolutionChainSecond> = mutableListOf()
@@ -286,10 +241,6 @@ class PokemonRepository @Inject constructor(
                 dao.insertPokemonEvolutionsSecond(
                     secondChain
                 )
-
-
-
-            }
 
 
         }

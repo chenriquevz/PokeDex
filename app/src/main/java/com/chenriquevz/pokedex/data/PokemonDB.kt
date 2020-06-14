@@ -11,7 +11,7 @@ import com.chenriquevz.pokedex.model.*
         PokemonGeneral::class, AbilitiesList::class, Stats::class, Type::class,
         PokemonSpecies::class, PokemonVarieties::class,
         PokemonByType::class, PokemonByNumber::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 abstract class PokemonDB : RoomDatabase() {

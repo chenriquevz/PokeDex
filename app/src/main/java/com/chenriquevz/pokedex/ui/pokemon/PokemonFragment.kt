@@ -184,6 +184,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
             Observer { evolution ->
 
                 if (evolution != null) {
+                    Log.d("evolution-validation", evolution.toString())
                     populateEvolution(evolution)
                     progressBar.visibility = View.GONE
                 }
