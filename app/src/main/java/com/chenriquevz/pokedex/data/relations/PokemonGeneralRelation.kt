@@ -7,27 +7,24 @@ import com.chenriquevz.pokedex.model.PokemonGeneral
 import com.chenriquevz.pokedex.model.Stats
 import com.chenriquevz.pokedex.model.Type
 
-class PokemonGeneralRelation {
-
+data class PokemonGeneralRelation(
     @Embedded
-    var pokemonGeneral: PokemonGeneral? = null
+    val pokemonGeneral: PokemonGeneral,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id"
+    )
+    val abilitiesList: List<AbilitiesList>,
 
     @Relation(
         parentColumn = "id",
         entityColumn = "id"
     )
-    var abilitiesList: List<AbilitiesList> = emptyList()
+    val stats: List<Stats>,
 
     @Relation(
         parentColumn = "id",
         entityColumn = "id"
     )
-    var stats: List<Stats> = emptyList()
-
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "id"
-    )
-    var type: List<Type> = emptyList()
-
-}
+    val type: List<Type>
+)

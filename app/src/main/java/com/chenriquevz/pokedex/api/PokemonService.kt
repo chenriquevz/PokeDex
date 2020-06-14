@@ -30,7 +30,7 @@ interface PokemonService {
 
     @GET("pokemon-species/{id}")
     suspend fun pokemonSpecies(
-        @Path("id")species: Int
+        @Path("id")species: Int?
     ): Response<PokemonSpecies>
 
     @GET("ability/{id}")

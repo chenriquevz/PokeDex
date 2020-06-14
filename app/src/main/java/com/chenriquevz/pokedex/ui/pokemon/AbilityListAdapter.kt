@@ -23,7 +23,6 @@ class AbilityListAdapter : ListAdapter<AbilitiesList, RecyclerView.ViewHolder>(R
         }
     }
 
-    override fun getItemViewType(position: Int) = R.layout.viewholder_ability
 
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<AbilitiesList>() {
@@ -31,7 +30,7 @@ class AbilityListAdapter : ListAdapter<AbilitiesList, RecyclerView.ViewHolder>(R
                 oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: AbilitiesList, newItem: AbilitiesList): Boolean =
-                oldItem == newItem
+                oldItem.ability.nameGeneral == newItem.ability.nameGeneral
         }
     }
 

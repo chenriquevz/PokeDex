@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.chenriquevz.pokedex.api.Result
+import com.chenriquevz.pokedex.utils.getDistinct
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
@@ -73,7 +74,7 @@ object GetResult {
         recursiveSpecies: suspend (A) -> Unit
     ): LiveData<Result<T>> =
         liveData(Dispatchers.IO) {
-            emit(Result.loading<T>())
+
             val source = databaseQuery.invoke().map {
                 Result.success(
                     it

@@ -5,16 +5,13 @@ import androidx.room.Relation
 import com.chenriquevz.pokedex.model.PokemonSpecies
 import com.chenriquevz.pokedex.model.PokemonVarieties
 
-class PokemonSpeciesRelation {
-
+data class PokemonSpeciesRelation(
     @Embedded
-    var pokemonSpecies: PokemonSpecies? = null
+    val pokemonSpecies: PokemonSpecies,
 
     @Relation(
         parentColumn = "id",
         entityColumn = "id"
     )
-    var pokemonVarieties: List<PokemonVarieties> = emptyList()
-
-
-}
+    val pokemonVarieties: List<PokemonVarieties>
+)

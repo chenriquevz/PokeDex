@@ -6,29 +6,26 @@ import com.chenriquevz.pokedex.model.EvolutionChainFirst
 import com.chenriquevz.pokedex.model.EvolutionChainSecond
 import com.chenriquevz.pokedex.model.PokemonEvolution
 
-class PokemonEvolutionRelation {
-
+data class PokemonEvolutionRelation(
     @Embedded
-    var pokemonBase: PokemonEvolution? = null
-
+    val pokemonBase: PokemonEvolution? = null,
     @Relation(
         parentColumn = "id",
         entityColumn = "id",
         entity = EvolutionChainFirst::class
     )
-    var pokemonChainFirst: List<PokemonFirstToSecondChain> = emptyList()
+    val pokemonChainFirst: List<PokemonFirstToSecondChain>  = emptyList()
+)
 
-}
 
-class PokemonFirstToSecondChain {
-
+data class PokemonFirstToSecondChain(
     @Embedded
-    var pokemonFirst: EvolutionChainFirst? = null
+    val pokemonFirst: EvolutionChainFirst? = null,
 
     @Relation(
         parentColumn = "localID",
         entityColumn = "id"
     )
-    var pokemonSecond: List<EvolutionChainSecond> = emptyList()
+    val pokemonSecond: List<EvolutionChainSecond>  = emptyList()
 
-}
+)

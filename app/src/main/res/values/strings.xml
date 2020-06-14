@@ -2,8 +2,12 @@
     <string name="app_name">PokeDex</string>
 
 
-    <string name="pokemonid_display">#%1$s</string>
+    <string name="pokemonid_display">#%1$d</string>
     <string name="pokemon_stat">%1$s %2$d</string>
     <string name="search_hint">Nome ou número</string>
     <string name="search_error">"Por favor, preencha o nome ou número de Pokemon"</string>
+
+    <string name="homePokemon_transition_image">transitionimage%1$d</string>
+    <string name="homePokemon_transition_name">transitionname%1$d</string>
+    <string name="homePokemon_transition_id">transitionid%1$d</string>
 </resources>

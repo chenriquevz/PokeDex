@@ -5,15 +5,12 @@ import androidx.room.Relation
 import com.chenriquevz.pokedex.model.AbilityEffectEntries
 import com.chenriquevz.pokedex.model.PokemonAbility
 
-class PokemonAbilityRelation {
-
+data class PokemonAbilityRelation(
     @Embedded
-    var pokemonAbility: PokemonAbility? = null
-
+    val pokemonAbility: PokemonAbility? = null,
     @Relation(
         parentColumn = "id",
         entityColumn = "id"
     )
-    var abilityEffectEntries: List<AbilityEffectEntries> = emptyList()
-
-}
+    val abilityEffectEntries: List<AbilityEffectEntries> = emptyList()
+)

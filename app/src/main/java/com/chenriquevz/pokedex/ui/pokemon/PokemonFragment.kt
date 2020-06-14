@@ -9,17 +9,19 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatSpinner
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.chenriquevz.pokedex.R
 import com.chenriquevz.pokedex.data.relations.PokemonGeneralRelation
-import com.chenriquevz.pokedex.data.relations.PokemonSpeciesRelation
 import com.chenriquevz.pokedex.databinding.FragmentPokemonBinding
 import com.chenriquevz.pokedex.di.Injectable
 import com.chenriquevz.pokedex.di.injector
@@ -27,25 +29,39 @@ import com.chenriquevz.pokedex.di.viewModel
 import com.chenriquevz.pokedex.model.PokemonVarieties
 import com.chenriquevz.pokedex.api.Result
 import com.chenriquevz.pokedex.data.relations.PokemonEvolutionRelation
+import com.chenriquevz.pokedex.model.PokemonSpeciesComplete
 import com.chenriquevz.pokedex.ui.pokemon.carrossel.CarrosselAdapter
 import com.chenriquevz.pokedex.ui.pokemon.evolution.EvolutionListAdapter
 import com.chenriquevz.pokedex.utils.*
 
 
-class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectable {
+class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener,
+    Injectable {
 
     private val pokemonViewModel by viewModel(this) {
         injector.pokemonViewModelFactory.create(args.pokemonID)
     }
     private val args: PokemonFragmentArgs by navArgs()
 
-    private lateinit var viewPager: ViewPager2
     private lateinit var _context: Context
     private lateinit var spinner: AppCompatSpinner
     private lateinit var progressBar: ProgressBar
     private var _binding: FragmentPokemonBinding? = null
     private val _typeListAdapter = TypeListAdapter()
     private val _abilitiesListAdapter = AbilityListAdapter()
+    private val _evolutionListAdapter = EvolutionListAdapter()
+    private var layoutEvolution: GridLayoutManager? = null
+    private lateinit var recyclerViewEvolution: RecyclerView
+    private val _viewPagerAdapter = CarrosselAdapter() { imageReady() }
+    private lateinit var viewPager: ViewPager2
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        sharedElementEnterTransition =
+                 TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,17 +69,37 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPokemonBinding.inflate(inflater, container, false)
+        postponeEnterTransition()
 
         val rootView = _binding?.root
         _context = rootView!!.context
 
         spinner = _binding?.pokemonSpinner!!
-        spinner.onItemSelectedListener = this
+        viewPager = _binding!!.pokemonPokemonImage
         progressBar = _binding?.pokemonProgressbar!!
+
+        spinner.onItemSelectedListener = this
+
 
         setData()
 
+
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (args.pokemonID.isDigitsOnly()) {
+            _binding?.pokemonPokemonImage?.transitionName =
+                _context.getString(R.string.homePokemon_transition_image, args.pokemonID.toInt())
+            _binding?.pokemonPokemonName?.transitionName =
+                _context.getString(R.string.homePokemon_transition_name, args.pokemonID.toInt())
+            _binding?.pokemonPokemonID?.transitionName =
+                _context.getString(R.string.homePokemon_transition_id, args.pokemonID.toInt())
+        }
+
+
     }
 
 
@@ -92,8 +128,22 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         recyclerViewAbility?.adapter = _abilitiesListAdapter
         recyclerViewAbility?.layoutManager = layoutAbility
 
-        viewPager = _binding!!.pokemonPokemonImage
+        recyclerViewEvolution = _binding?.pokemonEvolutionRecycler!!
+        recyclerViewEvolution.adapter = _evolutionListAdapter
+
+
         viewPager.offscreenPageLimit = 2
+        viewPager.adapter = _viewPagerAdapter
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+
+            override fun onPageSelected(page: Int) {
+
+                    pokemonViewModel.updatePageSelected(page)
+
+            }
+        })
+
 
         pokemonViewModel.pokemon.observe(viewLifecycleOwner, Observer { result ->
 
@@ -102,45 +152,52 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
                     val data = result.data
                     if (data != null) {
                         populateBasic(result.data)
-                        populateImages(result.data)
-
-
-                        pokemonViewModel.species
-                            .observe(viewLifecycleOwner, Observer { species ->
-
-                                if (species != null) {
-                                    progressBar.visibility = View.GONE
-                                    _binding?.pokemonConstraint?.visibility = View.VISIBLE
-
-                                    populateSpecies(result.data, species)
-
-                                    pokemonViewModel.evolutionChain.observe(
-                                        viewLifecycleOwner,
-                                        Observer { evolution ->
-
-                                            if (evolution != null) {
-                                                populateEvolution(evolution)
-                                            }
-                                        })
-
-                                }
-
-                            })
-
                     }
 
                 }
+
                 Result.Status.LOADING -> {
-                    progressBar.visibility = View.VISIBLE
-                    _binding?.pokemonConstraint?.visibility = View.INVISIBLE
+
                 }
                 Result.Status.ERROR -> {
                     progressBar.visibility = View.GONE
+                    _binding?.pokemonConstraint?.visibility = View.INVISIBLE
+                    startPostponedEnterTransition()
                     _context.toastLong(result.message!!)
                 }
             }
         })
 
+        pokemonViewModel.speciesComplete
+            .observe(viewLifecycleOwner, Observer
+            { species ->
+
+                if (species != null) {
+                    populateImages(species)
+                    populateSpecies(species)
+
+                }
+            })
+
+        pokemonViewModel.evolutionChain.observe(
+            viewLifecycleOwner,
+            Observer { evolution ->
+
+                if (evolution != null) {
+                    populateEvolution(evolution)
+                    progressBar.visibility = View.GONE
+                }
+            })
+
+        pokemonViewModel.selectedSpecies.observe(viewLifecycleOwner, Observer { selection ->
+            spinner.setSelection(selection)
+
+        })
+
+        pokemonViewModel.viewPagerSelected
+            .observe(viewLifecycleOwner, Observer { page ->
+                viewPager.setCurrentItem(page, false)
+            })
 
     }
 
@@ -152,19 +209,7 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
 
         val entry: PokemonVarieties = parent.selectedItem as PokemonVarieties
-
-
-        pokemonViewModel.updateSelectedSpecies(position)
-
-        pokemonViewModel.pokemonVarieties(entry.pokemonVariety.urlGeneral.urlPokemonToID())
-            .observe(viewLifecycleOwner, Observer { result ->
-                populateBasic(result)
-
-                pokemonViewModel.species
-                    .observe(viewLifecycleOwner, Observer { species ->
-                        populateImages(result, species)
-                    })
-            })
+        pokemonViewModel.updateSelectedSpecies(position, entry.pokemonVariety.urlGeneral.urlPokemonToID().toString())
 
     }
 
@@ -172,10 +217,11 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     private fun populateBasic(data: PokemonGeneralRelation) {
 
         _binding?.pokemonPokemonName?.text =
-            data.pokemonGeneral?.name?.replaceDashCapitalizeWords()
+            data.pokemonGeneral.name.replaceDashCapitalizeWords()
+
         _binding?.pokemonPokemonID?.text = getString(
             R.string.pokemonid_display,
-            data.pokemonGeneral?.id.toString()
+            data.pokemonGeneral.id
         )
 
         if (data.stats.isNotEmpty()) {
@@ -226,71 +272,65 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
     }
 
     private fun populateImages(
-        data: PokemonGeneralRelation,
-        species: PokemonSpeciesRelation? = null
+        species: PokemonSpeciesComplete
     ) {
 
 
-        var primaryImage = data.pokemonGeneral?.id?.idToImageRequest()
-        if (species != null) {
+        var primaryImage = species.pokemonID.idToImageRequest()
+        val varietiesCount = species.pokemonSpecies?.pokemonVarieties?.size ?: 1
+        if (varietiesCount > 1) {
+
             val pokemonIndexVariety =
-                species.pokemonVarieties.single { it.pokemonVariety.nameGeneral == data.pokemonGeneral?.name }
-            val index = species.pokemonVarieties.indexOf(pokemonIndexVariety)
+                species.pokemonSpecies?.pokemonVarieties?.first { it.pokemonVariety.nameGeneral == species.pokemonName }
+
+
+            val index = species.pokemonSpecies?.pokemonVarieties?.indexOf(pokemonIndexVariety) ?: 0
             primaryImage =
                 when {
                     index > 0 -> {
-                        "${species.pokemonSpecies?.id?.urlVarietyConverter(index.plus(1))}"
+                        "${species.pokemonSpecies?.pokemonSpecies?.id?.urlVarietyConverter(
+                            index.plus(
+                                1
+                            )
+                        )}"
 
                     }
                     else -> {
-                        data.pokemonGeneral?.id?.idToImageRequest()
+                        primaryImage
                     }
                 }
         }
 
         val sprites = listOf(
             primaryImage,
-            data.pokemonGeneral?.sprites?.frontDefault,
-            data.pokemonGeneral?.sprites?.backDefault,
-            data.pokemonGeneral?.sprites?.frontShiny,
-            data.pokemonGeneral?.sprites?.backShiny,
-            data.pokemonGeneral?.sprites?.frontFemale,
-            data.pokemonGeneral?.sprites?.backFemale,
-            data.pokemonGeneral?.sprites?.frontShinyFemale,
-            data.pokemonGeneral?.sprites?.backShinyFemale
+            species.pokemonSprites?.frontDefault,
+            species.pokemonSprites?.backDefault,
+            species.pokemonSprites?.frontShiny,
+            species.pokemonSprites?.backShiny,
+            species.pokemonSprites?.frontFemale,
+            species.pokemonSprites?.backFemale,
+            species.pokemonSprites?.frontShinyFemale,
+            species.pokemonSprites?.backShinyFemale
         )
 
-        val spritesNotNull = sprites.filterNotNull()
 
-        val pagerAdapter = CarrosselAdapter(spritesNotNull)
-
-        viewPager.adapter = pagerAdapter
-
-        pokemonViewModel.viewPagerSelected
-            .observe(viewLifecycleOwner, Observer { page ->
-                viewPager.currentItem = page
-            })
-
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-
-            override fun onPageSelected(page: Int) {
-                pokemonViewModel.updatePageSelected(page)
-            }
+        _viewPagerAdapter.submitList(sprites.filterNotNull())
 
 
-        })
+
 
     }
 
     private fun populateSpecies(
-        data: PokemonGeneralRelation,
-        species: PokemonSpeciesRelation
+        species: PokemonSpeciesComplete
     ) {
 
 
-        val varieties = species.pokemonVarieties
+        if (species.pokemonSpecies?.pokemonVarieties != null && species.pokemonSpecies.pokemonVarieties.size > 1) {
 
-        if (varieties.size > 1) {
+
+            val varieties = species.pokemonSpecies.pokemonVarieties
+            val pokemonSelected = varieties.first { it.pokemonVariety.nameGeneral == species.pokemonName }
 
             val adapter = ArrayAdapter(
                 _context,
@@ -298,20 +338,9 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
                 varieties
             )
 
-            val index = varieties.indexOf(varieties.single
-            { it.pokemonVariety.nameGeneral == data.pokemonGeneral?.name }
-            )
-
-            pokemonViewModel.updateSelectedSpecies(index)
             spinner.adapter = adapter
+            spinner.setSelection(varieties.indexOf(pokemonSelected))
             spinner.visibility = View.VISIBLE
-
-            pokemonViewModel.selectedSpecies.observe(viewLifecycleOwner, Observer { selection ->
-
-                spinner.setSelection(selection)
-
-            })
-
         }
 
     }
@@ -319,10 +348,14 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
 
     private fun populateEvolution(evolutionChain: PokemonEvolutionRelation) {
 
-        _binding?.pokemonEvolutionFirstName?.text = evolutionChain.pokemonBase?.species?.nameGeneral?.replaceDashCapitalizeWords()
+        _binding?.pokemonEvolutionFirstName?.text =
+            evolutionChain.pokemonBase?.species?.nameGeneral?.replaceDashCapitalizeWords()
 
         Glide.with(_context)
-            .load(evolutionChain.pokemonBase?.species?.urlGeneral?.urlSpeciestoInt()?.idToImageRequest())
+            .load(
+                evolutionChain.pokemonBase?.species?.urlGeneral?.urlSpeciestoInt()
+                    ?.idToImageRequest()
+            )
             .fitCenter()
             .placeholder(R.drawable.ic_pokemonloading)
             .into(_binding!!.pokemonEvolutionFirst)
@@ -337,27 +370,32 @@ class PokemonFragment : Fragment(), AdapterView.OnItemSelectedListener, Injectab
         }
 
 
-        val firstEvolutionCount = if (evolutionChain.pokemonChainFirst.size > 2) 4 else evolutionChain.pokemonChainFirst.size
+        val firstEvolutionCount =
+            if (evolutionChain.pokemonChainFirst.size > 3) 4 else evolutionChain.pokemonChainFirst.size
         if (firstEvolutionCount > 0) {
             _binding?.pokemonEvolutionArrow?.visibility = View.VISIBLE
-            val recyclerViewEvolution = _binding?.pokemonEvolutionRecycler
-            val layoutType =
-                GridLayoutManager(
+
+            if (layoutEvolution == null) {
+                layoutEvolution = GridLayoutManager(
                     _context,
                     firstEvolutionCount,
                     LinearLayoutManager.VERTICAL,
                     false
                 )
-            val evolutionListAdapter = EvolutionListAdapter()
-            recyclerViewEvolution?.adapter = evolutionListAdapter
-            recyclerViewEvolution?.layoutManager = layoutType
 
-            evolutionListAdapter.submitList(evolutionChain.pokemonChainFirst)
+                recyclerViewEvolution.layoutManager = layoutEvolution
+            }
+
+
+
+            _evolutionListAdapter.submitList(evolutionChain.pokemonChainFirst)
         }
 
     }
 
-
+    private fun imageReady() {
+        startPostponedEnterTransition()
+    }
 
     override fun onDestroyView() {
         _binding = null

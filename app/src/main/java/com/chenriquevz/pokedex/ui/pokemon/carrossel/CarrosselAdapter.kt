@@ -1,19 +1,44 @@
 package com.chenriquevz.pokedex.ui.pokemon.carrossel
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.chenriquevz.pokedex.R
 
-class CarrosselAdapter(private val listUrl: List<String>) : RecyclerView.Adapter<CarrosselViewHolder>() {
+class CarrosselAdapter(private val imageReady: () -> Unit) :
+    ListAdapter<String, RecyclerView.ViewHolder>(
+        REPO_COMPARATOR
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, type: Int) =
         CarrosselViewHolder.create(parent, type)
 
-    override fun onBindViewHolder(holder: CarrosselViewHolder, position: Int) {
-        holder.bind(listUrl[position])
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val repoItem = getItem(position)
+
+
+        if (repoItem != null) {
+            (holder as CarrosselViewHolder).bind(repoItem) { imageReady() }
+        }
     }
 
-    override fun getItemViewType(position: Int) = R.layout.viewholder_carrossel
-    override fun getItemCount(): Int = listUrl.size
+
+    companion object {
+        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<String>() {
+            override fun areItemsTheSame(
+                oldItem: String,
+                newItem: String
+            ): Boolean =
+                oldItem == newItem
+
+            override fun areContentsTheSame(
+                oldItem: String,
+                newItem: String
+            ): Boolean =
+                oldItem == newItem
+        }
+    }
+
 
 }

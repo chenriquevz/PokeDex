@@ -2,6 +2,7 @@ package com.chenriquevz.pokedex.ui.pokemon.evolution.second
 
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,14 +33,12 @@ class SecondEvolutionViewHolder(private val binding: ViewholderSecondevolutionBi
             binding.pokemonEvolutionThirdName.text = result.species.nameGeneral.replaceDashCapitalizeWords()
             Glide.with(context)
                 .load(
-                    result.species.urlGeneral.urlSpeciestoInt()
-                        .idToImageRequest()
+                    result.species.urlGeneral.urlSpeciestoInt()?.idToImageRequest()
                 )
                 .fitCenter()
                 .placeholder(R.drawable.ic_pokemonloading)
                 .into(binding.pokemonEvolutionThird)
         }
-
 
 
         binding.pokemonEvolutionThird.setOnClickListener {

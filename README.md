@@ -28,7 +28,6 @@ A forma mais fácil para rodar a aplicação, é clonar/download/forkar esse rep
 ## O que ficou a desejar
 
 -   Não foi possível adicionar testes com o tempo alocado.
--   Faltou shared element transition
 -   O design ficou usável mas acredito que pode melhorar muito.
 
 

@@ -17,6 +17,8 @@ import com.chenriquevz.pokedex.model.*
 abstract class PokemonDB : RoomDatabase() {
 
     abstract fun pokemonDao(): PokemonDao
+    abstract fun pokemonDetail(): PokemonDetailDao
+    abstract fun pokemonSpecies(): PokemonSpeciesDao
 
     companion object {
 
